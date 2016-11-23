@@ -1,7 +1,8 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -11,9 +12,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static edu.calpoly.mjew.cpe436_calpolymapapp.R.string.google_maps_key;
-
-public class MainMapsActivity extends FragmentActivity implements OnMapReadyCallback
+public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback
 {
 
     private GoogleMap mMap;
@@ -23,6 +22,10 @@ public class MainMapsActivity extends FragmentActivity implements OnMapReadyCall
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_maps);
+        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        tb.setTitle(getTitle());
+        setSupportActionBar(null);
+        setSupportActionBar(tb);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -42,10 +45,9 @@ public class MainMapsActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng calpoly = new LatLng(35.300095, -120.659001);
+        //mMap.addMarker(new MarkerOptions().position(calpoly).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(calpoly));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
     }
 }

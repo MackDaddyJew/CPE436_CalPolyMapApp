@@ -1,8 +1,29 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:map="http://schemas.android.com/apk/res-auto"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/map"
-          android:name="com.google.android.gms.maps.SupportMapFragment"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          tools:context="edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity"/>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/toplayout"
+    android:orientation="vertical"
+    tools:context="edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:popupTheme="@style/AppTheme" />
+
+    <!--<Spinner
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
+
+    </Spinner> We need this spinner to work and be filled with building names-->
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

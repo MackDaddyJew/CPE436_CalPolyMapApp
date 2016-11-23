@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">CPE436_CalPolyMapApp</string>
-    <string name="title_activity_main_maps">Map</string>
+    <string name="title_activity_main_maps">CPE436_MapApp</string>
 </resources>
