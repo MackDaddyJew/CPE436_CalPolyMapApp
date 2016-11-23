@@ -11,6 +11,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback
 {
@@ -49,5 +50,10 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         //mMap.addMarker(new MarkerOptions().position(calpoly).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(calpoly));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        PolylineOptions plo = new PolylineOptions();
+        plo.add(new LatLng(35.301000, -120.659900), new LatLng(35.300295, -120.66000),
+                new LatLng(35.30095, -120.659000), new LatLng(35.30000, -120.659000));
+        plo.color(0xFFEE0000);
+        mMap.addPolyline(plo);
     }
 }
