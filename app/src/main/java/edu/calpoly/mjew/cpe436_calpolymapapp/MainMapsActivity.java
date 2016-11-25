@@ -1,10 +1,15 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,15 +29,43 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_maps);
+
+        //Initializing toolbar
         Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
         tb.setTitle(R.string.title_activity_main_maps);
         setSupportActionBar(null);
         setSupportActionBar(tb);
+
+        //Initializing Spinner
+        Spinner buildingList = (Spinner) findViewById(R.id.buildingSelection);
+        ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
+                R.array.buildings, android.R.layout.simple_spinner_item);
+        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        buildingList.setAdapter(spinAdapter);
+        /*buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                if (pos != 0) {
+                    String buildingInfo = parent.getItemAtPosition(pos).toString();
+                    Intent gotoMainIntent = new Intent(getApplicationContext(), buildingLandingPage.class);
+                    gotoMainIntent.putExtra("BuildingName", buildingInfo);
+                    // TODO: change this to startActivityForResult later
+                    startActivity(gotoMainIntent);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        }); */
+
+        //Initializing the Google map fragment
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //Fragment f = getSupportFragmentManager().findFragmentById(R.id.extraFrag);
     }
 
     /**

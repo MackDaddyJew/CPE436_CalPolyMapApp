@@ -14,11 +14,11 @@
         android:layout_height="?attr/actionBarSize"
         app:popupTheme="@style/AppTheme" />
 
-    <!--<Spinner
+    <Spinner
         android:layout_width="match_parent"
-        android:layout_height="20dp">
-    </Spinner> We need this spinner to work and be filled with building names-->
-    <!---->
+        android:layout_height="wrap_content"
+        android:id="@+id/buildingSelection"
+        android:background="@android:color/darker_gray" />
 
     <FrameLayout
         android:id="@+id/layout_1"
