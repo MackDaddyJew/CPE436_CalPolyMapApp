@@ -1,6 +1,7 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,13 +25,14 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_maps);
         Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
-        tb.setTitle(getTitle());
+        tb.setTitle(R.string.title_activity_main_maps);
         setSupportActionBar(null);
         setSupportActionBar(tb);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //Fragment f = getSupportFragmentManager().findFragmentById(R.id.extraFrag);
     }
 
     /**
