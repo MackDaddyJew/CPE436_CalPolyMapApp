@@ -3,12 +3,14 @@ package edu.calpoly.mjew.cpe436_calpolymapapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,6 +25,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 {
 
     private GoogleMap mMap;
+    private Fragment f1;
+    private Fragment f2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,24 +46,25 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 R.array.buildings, android.R.layout.simple_spinner_item);
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         buildingList.setAdapter(spinAdapter);
-        /*buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
-                if (pos != 0) {
-                    String buildingInfo = parent.getItemAtPosition(pos).toString();
-                    Intent gotoMainIntent = new Intent(getApplicationContext(), buildingLandingPage.class);
-                    gotoMainIntent.putExtra("BuildingName", buildingInfo);
-                    // TODO: change this to startActivityForResult later
-                    startActivity(gotoMainIntent);
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+            {
+                if(pos > 0)
+                {
+                    Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
+                    BuildingDetailFragment bdf = new BuildingDetailFragment();
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.add(R.id.layout_2, bdf);
+                    findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
+                    ft.commit();
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        }); */
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
 
         //Initializing the Google map fragment
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.

@@ -2,8 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:id="@+id/toplayout"
     android:orientation="vertical"
     tools:context="edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity">
@@ -11,7 +11,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="56dp"
         app:popupTheme="@style/AppTheme" />
 
     <Spinner
@@ -23,17 +23,20 @@
     <FrameLayout
         android:id="@+id/layout_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/layout_2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:visibility="gone">
     </FrameLayout>
 </LinearLayout>
