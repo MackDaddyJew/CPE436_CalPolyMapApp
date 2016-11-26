@@ -12,26 +12,26 @@ import java.util.ArrayList;
 public class Route
 {
     private ArrayList<LatLng> mWaypoints;
-    private ArrayList<String> mInstructions;
+    private ArrayList<Instruction> mInstructions;
     //need some collection for images? or perhaps create a new instructions class that contains a
     // single image and a string, and mInstructions can be a collection of those.
 
     public Route()
     {
         mWaypoints = new ArrayList<LatLng>();
-        mInstructions = new ArrayList<String>();
+        mInstructions = new ArrayList<Instruction>();
     }
 
     public ArrayList<LatLng> getWaypoints() { return mWaypoints; }
 
-    public ArrayList<String> getInstructions() { return mInstructions; }
+    public ArrayList<Instruction> getInstructions() { return mInstructions; }
 
     public void addWaypoint(LatLng wp)
     {
         mWaypoints.add(wp);
     }
 
-    public void addInstruction(String s)
+    public void addInstruction(Instruction s)
     {
         mInstructions.add(s);
     }
@@ -41,7 +41,7 @@ public class Route
         mWaypoints = newWp;
     }
 
-    public void replaceInstructions(ArrayList<String> newIns)
+    public void replaceInstructions(ArrayList<Instruction> newIns)
     {
         mInstructions = newIns;
     }
