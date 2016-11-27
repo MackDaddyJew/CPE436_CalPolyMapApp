@@ -61,7 +61,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_maps);
 
@@ -142,13 +142,15 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     //Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
 
                     // access picture from database
-                    getImageFromDatabase(buildingNumber);
+
+                    Bundle mBundle = getImageFromDatabase(buildingNumber);
 
                     Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
                     BuildingDetailFragment bdf = new BuildingDetailFragment();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.layout_2, bdf, "BuildingDetailFragment");
                     findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
+                    bdf.setArguments(mBundle);
                     ft.commit();
                     bdf = null;
                     ft = null;
@@ -197,7 +199,10 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
 
-    public void getImageFromDatabase(String imageNumber) {
+    public Bundle getImageFromDatabase(String imageNumber) {
+
+        final Bundle bundle = new Bundle();
+        bundle.putString("imageUri", "test");
 
         String imageName = IMAGE_FOLDER_BUILDINGS + "/" + FILE_PREFIX + imageNumber + FILE_EXTENSION;
         StorageReference imageRef = mStorageRef.child(imageName);
@@ -216,8 +221,11 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
                 // Local temp file has been created
                 Uri imageUri = Uri.fromFile(localFile);
-                mImageView.setImageURI(imageUri);
-                mTextView.setText(imageUri.toString());
+
+                bundle.putString("imageUri", imageUri.toString());
+
+                //mImageView.setImageURI(imageUri);
+                //mTextView.setText(imageUri.toString());
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -227,5 +235,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 Toast.makeText(MainMapsActivity.this, "Download failed", Toast.LENGTH_SHORT).show();
             }
         });
+        return bundle;
     }
 }
