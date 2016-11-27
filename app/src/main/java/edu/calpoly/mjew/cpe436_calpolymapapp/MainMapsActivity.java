@@ -50,6 +50,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseReference;
+    private ImageView mImageView;
+    private TextView mTextView;
 
     private String pictureName;
     private File localFile;
@@ -65,6 +67,12 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
         // initialize Firebase Database
         initDatabase();
+
+        // inflate xml view!
+        View inflatedView = getLayoutInflater().inflate(R.layout.fragment_building_detail, null);
+        mImageView = (ImageView) inflatedView.findViewById(R.id.buildingDetailImage);
+        mTextView = (TextView) inflatedView.findViewById(R.id.buildingDetailText);
+
 
         DummyArray.add(new Instruction("Test 1", getResources().getDrawable(R.drawable.cast_ic_notification_play)));
         DummyArray.add(new Instruction("Test 2", getResources().getDrawable(R.drawable.cast_ic_notification_forward)));
@@ -130,8 +138,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     String buildingName = parent.getSelectedItem().toString();
                     String buildingNumber = buildingName.substring(0, 3);
 
-                    Toast.makeText(MainMapsActivity.this, "name of building: " + buildingName, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainMapsActivity.this, "name of building: " + buildingName, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
 
                     // access picture from database
                     getImageFromDatabase(buildingNumber);
@@ -208,8 +216,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
                 // Local temp file has been created
                 Uri imageUri = Uri.fromFile(localFile);
-                //mImageView.setImageURI(imageUri);
-                //mTextView.setText(imageUri.toString());
+                mImageView.setImageURI(imageUri);
+                mTextView.setText(imageUri.toString());
 
             }
         }).addOnFailureListener(new OnFailureListener() {
