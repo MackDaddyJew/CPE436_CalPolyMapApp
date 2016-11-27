@@ -1,11 +1,8 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -16,38 +13,58 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback
-{
+public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static final String IMAGE_FOLDER_BUILDINGS = "buildings";
+    private static final String FILE_PREFIX = "building_";
+    private static final String FILE_EXTENSION = ".jpeg";
 
     private GoogleMap mMap;
     private Fragment f1;
     private Fragment f2;
 
+    private StorageReference mStorageRef;
+    private DatabaseReference mDatabaseReference;
+
+    private String pictureName;
+    private File localFile;
+    private Uri imageUri;
+
     ArrayList<Instruction> DummyArray = new ArrayList<Instruction>();
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_maps);
+
+        // initialize Firebase Database
+        initDatabase();
 
         DummyArray.add(new Instruction("Test 1", getResources().getDrawable(R.drawable.cast_ic_notification_play)));
         DummyArray.add(new Instruction("Test 2", getResources().getDrawable(R.drawable.cast_ic_notification_forward)));
@@ -66,37 +83,34 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 R.array.buildings, android.R.layout.simple_spinner_item);
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         buildingList.setAdapter(spinAdapter);
-        buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
-            {
-                if(pos == 0)
-                {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+
+
+                if (pos == 0) {
                     FragmentTransaction temp = getSupportFragmentManager().beginTransaction();
-                    if(getSupportFragmentManager().findFragmentByTag("ListFragment") != null)
+                    if (getSupportFragmentManager().findFragmentByTag("ListFragment") != null)
                         temp.remove(getSupportFragmentManager().findFragmentByTag("ListFragment"));
-                    if(getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment") != null)
+                    if (getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment") != null)
                         temp.remove(getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment"));
                     temp.commit();
                     findViewById(R.id.layout_2).setVisibility(View.GONE);
-                }
-                else if(pos == 1)
-                {
+                } else if (pos == 1) {
                     Log.d("onItemSelected: ", "Creating a new ListFragment");
                     ListFragment lf = new ListFragment();
                     lf.setListAdapter(new ArrayAdapter<Instruction>(getApplicationContext(),
                             R.layout.fragment_route_detail, DummyArray) {
                         @Override
-                        public View getView(int pos, View convertView, ViewGroup parent)
-                        {
+                        public View getView(int pos, View convertView, ViewGroup parent) {
                             LinearLayout rtn;
                             TextView tv;
                             ImageView iv;
-                            if(convertView == null)
-                                rtn = (LinearLayout)getLayoutInflater().inflate(R.layout.fragment_route_detail, parent, false);
+                            if (convertView == null)
+                                rtn = (LinearLayout) getLayoutInflater().inflate(R.layout.fragment_route_detail, parent, false);
                             else
-                                rtn = (LinearLayout)convertView;
+                                rtn = (LinearLayout) convertView;
                             tv = (TextView) rtn.findViewById(R.id.instructionText);
                             iv = (ImageView) rtn.findViewById(R.id.instructionImage);
                             tv.setText(getItem(pos).getText());
@@ -110,9 +124,18 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     ft.commit();
                     ft = null;
                     lf = null;
-                }
-                else if(pos > 1)
-                {
+                } else if (pos > 1) {
+
+                    // get the number of the building
+                    String buildingName = parent.getSelectedItem().toString();
+                    String buildingNumber = buildingName.substring(0, 3);
+
+                    Toast.makeText(MainMapsActivity.this, "name of building: " + buildingName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
+
+                    // access picture from database
+                    getImageFromDatabase(buildingNumber);
+
                     Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
                     BuildingDetailFragment bdf = new BuildingDetailFragment();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -125,7 +148,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         //Initializing the Google map fragment
@@ -145,8 +169,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap)
-    {
+    public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng calpoly = new LatLng(35.300095, -120.659001);
         //mMap.addMarker(new MarkerOptions().position(calpoly).title("Marker in Sydney"));
@@ -157,5 +180,44 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 new LatLng(35.30095, -120.659000), new LatLng(35.30000, -120.659000));
         plo.color(0xFFEE0000);
         mMap.addPolyline(plo);
+    }
+
+    public void initDatabase() {
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        //mStorageRef = FirebaseStorage.getInstance().getReference();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+
+    public void getImageFromDatabase(String imageNumber) {
+
+        String imageName = IMAGE_FOLDER_BUILDINGS + "/" + FILE_PREFIX + imageNumber + FILE_EXTENSION;
+        StorageReference imageRef = mStorageRef.child(imageName);
+
+        localFile = null;
+        try {
+            localFile = File.createTempFile("images", FILE_EXTENSION);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(MainMapsActivity.this, "Download done", Toast.LENGTH_SHORT).show();
+
+                // Local temp file has been created
+                Uri imageUri = Uri.fromFile(localFile);
+                //mImageView.setImageURI(imageUri);
+                //mTextView.setText(imageUri.toString());
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Toast.makeText(MainMapsActivity.this, "Download failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
