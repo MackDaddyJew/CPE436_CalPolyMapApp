@@ -2,19 +2,19 @@
 <resources>
     <string-array name="buildings">
         <item>Select a Building</item>
-        <item>01 - Administration</item>
-        <item>02 - Cotchett Education Building</item>
-        <item>03 - Business</item>
-        <item>04 - Research Development Center</item>
-        <item>05 - Architecture and Environmental Design</item>
-        <item>06 - Christopher Cohan Center</item>
-        <item>07 - Advanced Technology Laboratories</item>
-        <item>08 - Bioresource and Agricultural Engineering</item>
-        <item>09 - Farm Shop</item>
-        <item>10 - Alan A. Erhart Agriculture</item>
-        <item>11 - Agricultural Sciences</item>
-        <item>13 - Engineering</item>
-        <item>14 - Frank E. Pilling Building</item>
+        <item>001 - Administration</item>
+        <item>002 - Cotchett Education Building</item>
+        <item>003 - Business</item>
+        <item>004 - Research Development Center</item>
+        <item>005 - Architecture and Environmental Design</item>
+        <item>006 - Christopher Cohan Center</item>
+        <item>007 - Advanced Technology Laboratories</item>
+        <item>008 - Bioresource and Agricultural Engineering</item>
+        <item>009 - Farm Shop</item>
+        <item>010 - Alan A. Erhart Agriculture</item>
+        <item>011 - Agricultural Sciences</item>
+        <item>013 - Engineering</item>
+        <item>014 - Frank E. Pilling Building</item>
     </string-array>
 
 
