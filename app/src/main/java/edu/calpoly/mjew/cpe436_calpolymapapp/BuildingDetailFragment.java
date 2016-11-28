@@ -1,11 +1,8 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
-import android.icu.util.TimeUnit;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by mackenzie on 11/24/16.
@@ -23,7 +22,6 @@ public class BuildingDetailFragment extends Fragment {
 
     private ImageView mImageView;
     private TextView mTextView;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,9 +51,9 @@ public class BuildingDetailFragment extends Fragment {
 
         Uri mUri = Uri.parse(getArguments().getString("imageUri"));
         String s = getArguments().getString("imageString");
+
         mImageView.setImageURI(mUri);
         mTextView.setText(s);
-
 
         return ll;
     }

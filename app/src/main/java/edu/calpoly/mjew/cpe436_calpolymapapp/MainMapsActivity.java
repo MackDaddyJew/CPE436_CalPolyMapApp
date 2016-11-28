@@ -1,7 +1,14 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
+import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -12,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -24,21 +32,30 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import static android.Manifest.permission.CAMERA;
 
 public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String IMAGE_FOLDER_BUILDINGS = "buildings";
     private static final String FILE_PREFIX = "building_";
     private static final String FILE_EXTENSION = ".jpeg";
+
+    private static final int GALLERY_INTENT = 5;
+    private static final int CAPTURE_INTENT = 1;
 
     private GoogleMap mMap;
     private Fragment f1;
@@ -48,6 +65,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private DatabaseReference mDatabaseReference;
     private ImageView mImageView;
     private TextView mTextView;
+    private Button mCaptureImage;
 
     private String pictureName;
     private File localFile;
@@ -162,6 +180,28 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        mCaptureImage = (Button) findViewById(R.id.captureImage);
+        mCaptureImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.putExtra("number", 000);
+                startActivityForResult(intent, GALLERY_INTENT);
+
+
+                /*if (mayRequestCamera()) {
+                    //Log.v("permission Granted", "good to go");
+                    startActivityForResult(cameraIntent, CAPTURE_INTENT);
+                }*/
+            }
+        });
     }
 
     /**
@@ -185,6 +225,40 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 new LatLng(35.30095, -120.659000), new LatLng(35.30000, -120.659000));
         plo.color(0xFFEE0000);
         mMap.addPolyline(plo);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
+            final Uri uri = data.getData();
+
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+
+            pictureName = FILE_PREFIX + dateFormat.format(date) + FILE_EXTENSION;
+
+            //StorageReference filePath = mStorageRef.child("pictures").child(uri.getLastPathSegment());
+            StorageReference filePath = mStorageRef.child(IMAGE_FOLDER_BUILDINGS).child(pictureName);
+
+            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(MainMapsActivity.this, "Upload done", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if (requestCode == CAPTURE_INTENT && resultCode == RESULT_OK) {
+            //Toast.makeText(MainMapsActivity.this, "Handle image", Toast.LENGTH_SHORT).show();
+
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+        }
     }
 
     public void initDatabase() {
@@ -213,4 +287,27 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
         return bundle;
     }
+
+    private boolean mayRequestCamera() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(CAMERA)) {
+            Snackbar.make(mImageView, "Grant access?", Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{CAMERA}, CAPTURE_INTENT);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{CAMERA}, CAPTURE_INTENT);
+        }
+        return false;
+    }
+
 }
