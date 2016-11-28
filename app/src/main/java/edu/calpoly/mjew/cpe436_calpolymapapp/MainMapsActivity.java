@@ -2,7 +2,6 @@ package edu.calpoly.mjew.cpe436_calpolymapapp;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -25,12 +24,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -71,7 +67,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         // inflate xml view!
         View inflatedView = getLayoutInflater().inflate(R.layout.fragment_building_detail, null);
         mImageView = (ImageView) inflatedView.findViewById(R.id.buildingDetailImage);
-        mTextView = (TextView) inflatedView.findViewById(R.id.buildingDetailText);
+        //mTextView = (TextView) inflatedView.findViewById(R.id.buildingDetailText);
 
 
         DummyArray.add(new Instruction("Test 1", getResources().getDrawable(R.drawable.cast_ic_notification_play)));
@@ -94,7 +90,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
 
 
                 if (pos == 0) {
@@ -142,8 +137,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     //Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
 
                     // access picture from database
-
                     Bundle mBundle = getImageFromDatabase(buildingNumber);
+                    mBundle.putString("imageString", buildingName);
 
                     Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
                     BuildingDetailFragment bdf = new BuildingDetailFragment();
@@ -198,11 +193,9 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
-
     public Bundle getImageFromDatabase(String imageNumber) {
 
-        final Bundle bundle = new Bundle();
-        bundle.putString("imageUri", "test");
+        Bundle bundle = new Bundle();
 
         String imageName = IMAGE_FOLDER_BUILDINGS + "/" + FILE_PREFIX + imageNumber + FILE_EXTENSION;
         StorageReference imageRef = mStorageRef.child(imageName);
@@ -214,27 +207,10 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             e.printStackTrace();
         }
 
-        imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(MainMapsActivity.this, "Download done", Toast.LENGTH_SHORT).show();
+        imageRef.getFile(localFile);
+        imageUri = Uri.fromFile(localFile);
+        bundle.putString("imageUri", imageUri.toString());
 
-                // Local temp file has been created
-                Uri imageUri = Uri.fromFile(localFile);
-
-                bundle.putString("imageUri", imageUri.toString());
-
-                //mImageView.setImageURI(imageUri);
-                //mTextView.setText(imageUri.toString());
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-                Toast.makeText(MainMapsActivity.this, "Download failed", Toast.LENGTH_SHORT).show();
-            }
-        });
         return bundle;
     }
 }

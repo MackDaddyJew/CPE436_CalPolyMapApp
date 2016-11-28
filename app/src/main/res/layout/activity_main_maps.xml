@@ -1,10 +1,9 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toplayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/toplayout"
     android:orientation="vertical"
     tools:context="edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity">
 
@@ -15,9 +14,9 @@
         app:popupTheme="@style/AppTheme" />
 
     <Spinner
+        android:id="@+id/buildingSelection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buildingSelection"
         android:background="@android:color/darker_gray" />
 
     <FrameLayout
@@ -25,11 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5">
+
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </FrameLayout>
 
     <FrameLayout
@@ -37,6 +37,5 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:visibility="gone">
-    </FrameLayout>
+        android:visibility="gone"></FrameLayout>
 </LinearLayout>
