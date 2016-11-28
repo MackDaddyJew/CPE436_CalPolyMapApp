@@ -48,6 +48,9 @@ import java.util.Date;
 
 import static android.Manifest.permission.CAMERA;
 
+/**
+ * Meant to be Activity #1. Utilizes 2 fragments.
+ */
 public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String IMAGE_FOLDER_BUILDINGS = "buildings";
@@ -58,8 +61,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private static final int CAPTURE_INTENT = 1;
 
     private GoogleMap mMap;
-    private Fragment f1;
-    private Fragment f2;
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseReference;
@@ -72,7 +73,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private Uri imageUri;
 
     ArrayList<Instruction> DummyArray = new ArrayList<Instruction>();
-
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -108,7 +108,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
 
                 if (pos == 0) {
                     FragmentTransaction temp = getSupportFragmentManager().beginTransaction();
@@ -181,7 +180,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         mCaptureImage = (Button) findViewById(R.id.captureImage);
         mCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,17 +205,14 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * This is where we can add markers or lines, add listeners or move the camera.
+     * This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng calpoly = new LatLng(35.300095, -120.659001);
-        //mMap.addMarker(new MarkerOptions().position(calpoly).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(calpoly));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         PolylineOptions plo = new PolylineOptions();
