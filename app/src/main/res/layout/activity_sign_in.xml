@@ -17,17 +17,29 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcom to Campus maps. Please use the buttons bellow to sign in into the application." />
+        android:layout_marginBottom="16dp"
+        android:text="Welcome to Campus maps. Please use the buttons bellow to sign in into the application."
+        android:textSize="20dp" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/sign_out_button_google"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign out from Google"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/sign_in_button_guest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign In as a guest" />
+        android:text="Sign in as a Guest"
+        android:textAllCaps="false" />
 
 </LinearLayout>
