@@ -227,7 +227,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
             final Uri uri = data.getData();
 

@@ -36,8 +36,7 @@ public class BuildingDetailFragment extends Fragment {
             Log.d("onCreateView: ", "attaching fragment. Container is: null");
         else
             Log.d("onCreateView: ", "attaching fragment. Container is: there");
-        FrameLayout fl = (FrameLayout) getActivity().findViewById(R.id.layout_2);
-        LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.fragment_building_detail, container, false);
+        FrameLayout ll = (FrameLayout) inflater.inflate(R.layout.fragment_building_detail, container, false);
         //((TextView)ll.findViewById(R.id.buildingDetailText)).setText("Is it working?");
 
         mImageView = (ImageView) ll.findViewById(R.id.buildingDetailImage);
