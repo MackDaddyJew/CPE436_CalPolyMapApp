@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -154,8 +155,8 @@ public class PhotoAdd extends AppCompatActivity {
 
                 }
 
-                //Bitmap imageBitmap = (Bitmap) extras.get("data");
-                //newPic.setImageBitmap(imageBitmap);
+                Bitmap imgBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                newPic.setImageBitmap(imgBitmap);
             }
         }
     }
