@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class fabObtions extends AppCompatActivity {
 
@@ -17,6 +18,10 @@ public class fabObtions extends AppCompatActivity {
 
         Intent in = getIntent();
         buildingName = in.getStringExtra("BuildingName");
+
+        //setTitle(buildingName + " - Options");
+        TextView title = (TextView) findViewById(R.id.buildingTitle);
+        title.setText(buildingName + " - Options");
 
         Button navigate_button = (Button) findViewById(R.id.navButton);
         navigate_button.setOnClickListener(new View.OnClickListener() {

@@ -11,6 +11,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.calpoly.mjew.cpe436_calpolymapapp.fabObtions">
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buildingTitle"
+        android:layout_weight="1"
+        android:textSize="20dp"/>
     <Button
         android:text="Navigation"
         android:layout_width="match_parent"
