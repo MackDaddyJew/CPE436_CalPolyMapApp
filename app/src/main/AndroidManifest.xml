@@ -8,12 +8,10 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
-
 
     <application
         android:allowBackup="true"
@@ -39,10 +37,24 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMapsActivity"></activity>
+        <activity android:name=".MainMapsActivity" />
+        <activity android:name=".fabObtions" />
+        <activity
+            android:name=".RouteSelect"
+            android:label="@string/title_activity_route_select"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".PhotoSelect"
+            android:label="@string/title_activity_photo_select"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ClassroomSelect"
+            android:label="@string/title_activity_classroom_select"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
+import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +25,7 @@ public class BuildingDetailFragment extends Fragment {
 
     private ImageView mImageView;
     private TextView mTextView;
+    String buildingName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,19 @@ public class BuildingDetailFragment extends Fragment {
         FrameLayout ll = (FrameLayout) inflater.inflate(R.layout.fragment_building_detail, container, false);
         //((TextView)ll.findViewById(R.id.buildingDetailText)).setText("Is it working?");
 
+        buildingName = getArguments().getString("BuildingName");
+
+        FloatingActionButton fab = (FloatingActionButton) ll.findViewById(R.id.buildingDetailFab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent fabSelect = new Intent(getActivity().getApplicationContext(), fabObtions.class);
+                fabSelect.putExtra("BuildingName", buildingName);
+                startActivity(fabSelect);
+            }
+        });
+
+
         mImageView = (ImageView) ll.findViewById(R.id.buildingDetailImage);
         mTextView = (TextView) ll.findViewById(R.id.buildingDetailText);
 
@@ -50,10 +67,9 @@ public class BuildingDetailFragment extends Fragment {
         }
 
         Uri mUri = Uri.parse(getArguments().getString("imageUri"));
-        String s = getArguments().getString("imageString");
 
         mImageView.setImageURI(mUri);
-        mTextView.setText(s);
+        mTextView.setText(buildingName);
 
         return ll;
     }

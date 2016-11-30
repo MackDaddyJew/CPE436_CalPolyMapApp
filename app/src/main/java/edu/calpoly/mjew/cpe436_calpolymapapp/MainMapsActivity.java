@@ -155,7 +155,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
                     // access picture from database
                     Bundle mBundle = getImageFromDatabase(buildingNumber);
-                    mBundle.putString("imageString", buildingName);
+                    mBundle.putString("BuildingName", buildingName);
 
                     Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
                     BuildingDetailFragment bdf = new BuildingDetailFragment();
