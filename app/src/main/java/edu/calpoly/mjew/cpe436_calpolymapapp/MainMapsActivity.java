@@ -193,7 +193,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 intent.putExtra("number", 000);
                 startActivityForResult(intent, GALLERY_INTENT);
 
-
                 /*if (mayRequestCamera()) {
                     //Log.v("permission Granted", "good to go");
                     startActivityForResult(cameraIntent, CAPTURE_INTENT);
@@ -212,16 +211,15 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng calpoly = new LatLng(35.300095, -120.659001);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(calpoly));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        LatLng calpoly = new LatLng(35.300972, -120.659001); //35.300972
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(calpoly, 15f));
+        Log.d("onMapReady: ", mMap.getCameraPosition().toString());
         PolylineOptions plo = new PolylineOptions();
         plo.add(new LatLng(35.301000, -120.659900), new LatLng(35.300295, -120.66000),
                 new LatLng(35.30095, -120.659000), new LatLng(35.30000, -120.659000));
         plo.color(0xFFEE0000);
         mMap.addPolyline(plo);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
