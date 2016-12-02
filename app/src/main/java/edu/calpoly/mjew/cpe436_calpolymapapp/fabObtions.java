@@ -14,7 +14,7 @@ public class fabObtions extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fab_obtions);
+        setContentView(R.layout.fragment_fab_obtions);
 
         Intent in = getIntent();
         buildingName = in.getStringExtra("BuildingName");
@@ -53,6 +53,16 @@ public class fabObtions extends AppCompatActivity {
             }
         });
 
-
+        Button route_button = (Button) findViewById(R.id.createRouteButton);
+        route_button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent routeCreatorIntent = new Intent(getApplicationContext(), MainMapsActivity.class);
+                routeCreatorIntent.putExtra("CONFIG1", MainMapsActivity.CONFIG1);
+                startActivity(routeCreatorIntent);
+            }
+        });
     }
 }

@@ -38,4 +38,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/classButton"
         android:layout_weight="1" />
+
+    <Button
+        android:text="Create Route To Building"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createRouteButton"
+        android:layout_weight="1"/>
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -34,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.Frame;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -52,6 +55,9 @@ import static android.Manifest.permission.CAMERA;
  * Meant to be Activity #1. Utilizes 2 fragments.
  */
 public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    public static final int CONFIG1 = 1; //signifies Route Creator configuration
+    public static final int CONFIG2 = 2; //havn't decided yet what theses are going to do. But I do need them.
 
     private static final String IMAGE_FOLDER_BUILDINGS = "buildings";
     private static final String FILE_PREFIX = "building_";
@@ -87,98 +93,27 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         mImageView = (ImageView) inflatedView.findViewById(R.id.buildingDetailImage);
         //mTextView = (TextView) inflatedView.findViewById(R.id.buildingDetailText);
 
-
         DummyArray.add(new Instruction("Test 1", getResources().getDrawable(R.drawable.cast_ic_notification_play)));
         DummyArray.add(new Instruction("Test 2", getResources().getDrawable(R.drawable.cast_ic_notification_forward)));
         DummyArray.add(new Instruction("Test 3", getResources().getDrawable(R.drawable.cast_ic_notification_connecting)));
         DummyArray.add(new Instruction("Test 4", getResources().getDrawable(R.drawable.cast_ic_notification_skip_next)));
 
-        //Initializing toolbar
-        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
-        tb.setTitle(R.string.title_activity_main_maps);
-        setSupportActionBar(null);
-        setSupportActionBar(tb);
-
-        //Initializing Spinner
-        Spinner buildingList = (Spinner) findViewById(R.id.buildingSelection);
-        ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
-                R.array.buildings, android.R.layout.simple_spinner_item);
-        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        buildingList.setAdapter(spinAdapter);
-        buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
-                if (pos == 0) {
-                    FragmentTransaction temp = getSupportFragmentManager().beginTransaction();
-                    if (getSupportFragmentManager().findFragmentByTag("ListFragment") != null)
-                        temp.remove(getSupportFragmentManager().findFragmentByTag("ListFragment"));
-                    if (getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment") != null)
-                        temp.remove(getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment"));
-                    temp.commit();
-                    findViewById(R.id.layout_2).setVisibility(View.GONE);
-                } else if (pos == 1) {
-                    Log.d("onItemSelected: ", "Creating a new ListFragment");
-                    ListFragment lf = new ListFragment();
-                    lf.setListAdapter(new ArrayAdapter<Instruction>(getApplicationContext(),
-                            R.layout.fragment_route_detail, DummyArray) {
-                        @Override
-                        public View getView(int pos, View convertView, ViewGroup parent) {
-                            LinearLayout rtn;
-                            TextView tv;
-                            ImageView iv;
-                            if (convertView == null)
-                                rtn = (LinearLayout) getLayoutInflater().inflate(R.layout.fragment_route_detail, parent, false);
-                            else
-                                rtn = (LinearLayout) convertView;
-                            tv = (TextView) rtn.findViewById(R.id.instructionText);
-                            iv = (ImageView) rtn.findViewById(R.id.instructionImage);
-                            tv.setText(getItem(pos).getText());
-                            iv.setImageDrawable(getItem(pos).getImage());
-                            return rtn;
-                        }
-                    });
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.layout_2, lf, "ListFragment");
-                    findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
-                    ft.commit();
-                    ft = null;
-                    lf = null;
-                } else if (pos > 1) {
-
-                    // get the number of the building
-                    String buildingName = parent.getSelectedItem().toString();
-                    String buildingNumber = buildingName.substring(0, 3);
-
-                    //Toast.makeText(MainMapsActivity.this, "name of building: " + buildingName, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
-
-                    // access picture from database
-                    Bundle mBundle = getImageFromDatabase(buildingNumber);
-                    mBundle.putString("BuildingName", buildingName);
-
-                    Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
-                    BuildingDetailFragment bdf = new BuildingDetailFragment();
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.layout_2, bdf, "BuildingDetailFragment");
-                    findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
-                    bdf.setArguments(mBundle);
-                    ft.commit();
-                    bdf = null;
-                    ft = null;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        //Initializing the Google map fragment
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        Intent thisIntent = getIntent();
+        if(thisIntent.getIntExtra("CONFIG1", 0) == CONFIG1)
+        {
+            Log.d("MACKENZIE: ", "Launching MainMapsActivity with route creator");
+            initToolbar();
+            initGoogleMap();
+            initRouteMaker();
+        }
+        else
+        {
+            //Main configuration for map
+            resetLayoutWeight();
+            initToolbar();
+            initSpinner();
+            initGoogleMap();
+        }
 
         mCaptureImage = (Button) findViewById(R.id.captureImage);
         mCaptureImage.setOnClickListener(new View.OnClickListener() {
@@ -186,8 +121,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             public void onClick(View v) {
 
                 //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 intent.putExtra("number", 000);
@@ -300,6 +233,127 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             requestPermissions(new String[]{CAMERA}, CAPTURE_INTENT);
         }
         return false;
+    }
+
+    //Initializing Toolbar
+    private void initToolbar()
+    {
+        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        tb.setTitle(R.string.title_activity_main_maps);
+        setSupportActionBar(null);
+        setSupportActionBar(tb);
+    }
+
+    //Initializing the Google map fragment
+    private void initGoogleMap()
+    {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    //resets R.id.layout_2 weight back to original value of 5
+    private void resetLayoutWeight()
+    {
+        FrameLayout fl = (FrameLayout)findViewById(R.id.layout_2);
+        fl.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                0, 0.5f));
+    }
+
+    //Initializing Spinner
+    private void initSpinner()
+    {
+        Spinner buildingList = (Spinner) findViewById(R.id.buildingSelection);
+        ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
+                R.array.buildings, android.R.layout.simple_spinner_item);
+        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        buildingList.setAdapter(spinAdapter);
+        buildingList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                if (pos == 0) {
+                    FragmentTransaction temp = getSupportFragmentManager().beginTransaction();
+                    if (getSupportFragmentManager().findFragmentByTag("ListFragment") != null)
+                        temp.remove(getSupportFragmentManager().findFragmentByTag("ListFragment"));
+                    if (getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment") != null)
+                        temp.remove(getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment"));
+                    temp.commit();
+                    findViewById(R.id.layout_2).setVisibility(View.GONE);
+                } else if (pos == 1) {
+                    Log.d("onItemSelected: ", "Creating a new ListFragment");
+                    ListFragment lf = new ListFragment();
+                    lf.setListAdapter(new ArrayAdapter<Instruction>(getApplicationContext(),
+                            R.layout.fragment_route_detail, DummyArray) {
+                        @Override
+                        public View getView(int pos, View convertView, ViewGroup parent) {
+                            LinearLayout rtn;
+                            TextView tv;
+                            ImageView iv;
+                            if (convertView == null)
+                                rtn = (LinearLayout) getLayoutInflater().inflate(R.layout.fragment_route_detail, parent, false);
+                            else
+                                rtn = (LinearLayout) convertView;
+                            tv = (TextView) rtn.findViewById(R.id.instructionText);
+                            iv = (ImageView) rtn.findViewById(R.id.instructionImage);
+                            tv.setText(getItem(pos).getText());
+                            iv.setImageDrawable(getItem(pos).getImage());
+                            return rtn;
+                        }
+                    });
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.layout_2, lf, "ListFragment");
+                    findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
+                    ft.commit();
+                    ft = null;
+                    lf = null;
+                } else if (pos > 1) {
+
+                    // get the number of the building
+                    String buildingName = parent.getSelectedItem().toString();
+                    String buildingNumber = buildingName.substring(0, 3);
+
+                    //Toast.makeText(MainMapsActivity.this, "name of building: " + buildingName, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
+
+                    // access picture from database
+                    Bundle mBundle = getImageFromDatabase(buildingNumber);
+                    mBundle.putString("BuildingName", buildingName);
+
+                    Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
+                    BuildingDetailFragment bdf = new BuildingDetailFragment();
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.layout_2, bdf, "BuildingDetailFragment");
+                    findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
+                    bdf.setArguments(mBundle);
+                    ft.commit();
+                    bdf = null;
+                    ft = null;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void initRouteMaker()
+    {
+        RouteCreatorFragment rcf = new RouteCreatorFragment();
+        FragmentTransaction temp = getSupportFragmentManager().beginTransaction();
+        if (getSupportFragmentManager().findFragmentByTag("ListFragment") != null)
+            temp.remove(getSupportFragmentManager().findFragmentByTag("ListFragment"));
+        if (getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment") != null)
+            temp.remove(getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment"));
+        temp.add(R.id.layout_2, rcf);
+        FrameLayout fl = (FrameLayout)findViewById(R.id.layout_2);
+        fl.setVisibility(View.VISIBLE);
+        fl.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                0, 0.05f));
+        temp.commit();
+        Log.d("MACKENZIE: ", "Commited Route creator");
     }
 
 }
