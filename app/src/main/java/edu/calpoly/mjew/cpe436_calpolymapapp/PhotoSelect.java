@@ -6,7 +6,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class PhotoSelect extends AppCompatActivity {
 
@@ -22,17 +25,30 @@ public class PhotoSelect extends AppCompatActivity {
         Intent in = getIntent();
         buildingName = in.getStringExtra("BuildingName");
 
+        String[] nameParts = buildingName.split(" - ");
+        for(String s : nameParts){
+            Log.v("nameSplit", s);
+        }
+
         setTitle(buildingName + ":\nPhotos");
+        //setTitleColor(R.color.white);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addPhoto);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        //.setAction("Action", null).show();
-                Intent fabAdd = new Intent(getApplicationContext(), PhotoAdd.class);
-                //fabAdd.putExtra("BuildingName", buildingName);
-                startActivity(fabAdd);
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                {
+                    Intent fabAdd = new Intent(getApplicationContext(), PhotoAdd.class);
+                    fabAdd.putExtra("BuildingName", buildingName);
+                    startActivity(fabAdd);
+                }
+                else
+                {
+                    // change to an option to log in with google?
+                    Snackbar.make(view, "Must be logged in to add Photos", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                }
             }
         });
     }

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
@@ -59,7 +61,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     public static final int CONFIG1 = 1; //signifies Route Creator configuration
     public static final int CONFIG2 = 2; //havn't decided yet what theses are going to do. But I do need them.
 
-    private static final String IMAGE_FOLDER_BUILDINGS = "buildings";
+    private static final String IMAGE_FOLDER_BUILDINGS = "testFolder";
     private static final String FILE_PREFIX = "building_";
     private static final String FILE_EXTENSION = ".jpeg";
 
@@ -125,11 +127,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 intent.setType("image/*");
                 intent.putExtra("number", 000);
                 startActivityForResult(intent, GALLERY_INTENT);
-
-                /*if (mayRequestCamera()) {
-                    //Log.v("permission Granted", "good to go");
-                    startActivityForResult(cameraIntent, CAPTURE_INTENT);
-                }*/
             }
         });
     }
@@ -167,12 +164,17 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             pictureName = FILE_PREFIX + dateFormat.format(date) + FILE_EXTENSION;
 
             //StorageReference filePath = mStorageRef.child("pictures").child(uri.getLastPathSegment());
-            StorageReference filePath = mStorageRef.child(IMAGE_FOLDER_BUILDINGS).child(pictureName);
+            StorageReference filePath = mStorageRef.child("classrooms/").child(pictureName);
 
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(MainMapsActivity.this, "Upload done", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(MainMapsActivity.this, "Upload failed", Toast.LENGTH_SHORT).show();
                 }
             });
         }

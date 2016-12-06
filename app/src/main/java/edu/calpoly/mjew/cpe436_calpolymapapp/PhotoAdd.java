@@ -17,10 +17,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -30,26 +44,53 @@ public class PhotoAdd extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_STORAGE = 1;
+    private static final int REQUEST_GALLERY = 2;
+
     private String mCurrentPhotoPath;
     String buildingName;
     ImageView newPic;
 
+    private StorageReference mStorageRef;
+    private DatabaseReference mDatabaseReference;
+
+    public void initDatabase() {
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_add);
 
+        initDatabase();
+
         newPic = (ImageView) findViewById(R.id.newPhoto);
         mayRequestCamera();
         mayRequestGallery();
 
+        // grab building name
+        //  TODO: need a way to check the extras being sent through an intent
+        //          because classroom and route can also call photo add class
+        Intent in = getIntent();
+        buildingName = in.getStringExtra("BuildingName");
+
+
+
+        Button selectPic = (Button) findViewById(R.id.confirmButton);
+        selectPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v("hello", "test works");
+            }
+        });
 
 
         Button takePic = (Button) findViewById(R.id.takePicButton);
         takePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.v("hello", "test works");
 
                 Intent takePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -72,13 +113,7 @@ public class PhotoAdd extends AppCompatActivity {
             }
         });
 
-        Button selectPic = (Button) findViewById(R.id.selectPicButton);
-        selectPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
     }
 
     private boolean mayRequestCamera() {
@@ -146,6 +181,7 @@ public class PhotoAdd extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
                 Bundle extras = data.getExtras();
+                //final Uri imgUri = data.getData();
 
                 try {
                     MediaStore.Images.Media.insertImage(
@@ -155,8 +191,38 @@ public class PhotoAdd extends AppCompatActivity {
 
                 }
 
-                Bitmap imgBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-                newPic.setImageBitmap(imgBitmap);
+                Toast.makeText(getApplicationContext(), "Photo saved to Gallery", Toast.LENGTH_SHORT).show();
+
+                // get components of file name to upload to Firebase Storage
+                Date date = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+
+                String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                userName = userName.split("com.google.android.gms.internal.")[0];
+
+
+
+                String buildingNumber = buildingName.split(" - ")[0];
+
+                String pictureName = buildingNumber + "_" + userName + "_"
+                        + dateFormat.format(date) + ".jpeg";
+
+                // need a way to check class type (i.e. buildings, classrooms, routes)
+                // default to "buildings" right now
+                StorageReference filePath = mStorageRef.child("buildings").child(pictureName);
+
+                Uri imageUri = Uri.fromFile(new File(mCurrentPhotoPath));
+                filePath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getApplicationContext(), "Photo saved to Firebase", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+                //Bitmap imgBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                //newPic.setImageBitmap(imgBitmap);
             }
         }
     }
