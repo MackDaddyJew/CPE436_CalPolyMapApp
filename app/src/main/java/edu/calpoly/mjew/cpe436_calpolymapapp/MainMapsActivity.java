@@ -69,6 +69,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private static final int CAPTURE_INTENT = 1;
 
     private GoogleMap mMap;
+    RouteCreatorFragment mRCF;
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseReference;
@@ -144,12 +145,31 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         LatLng calpoly = new LatLng(35.300972, -120.659001); //35.300972
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(calpoly, 15f));
         Log.d("onMapReady: ", mMap.getCameraPosition().toString());
-        PolylineOptions plo = new PolylineOptions();
-        plo.add(new LatLng(35.301000, -120.659900), new LatLng(35.300295, -120.66000),
-                new LatLng(35.30095, -120.659000), new LatLng(35.30000, -120.659000));
-        plo.color(0xFFEE0000);
-        mMap.addPolyline(plo);
+        if(findViewById(R.id.routeGeneration) != null)
+            mRCF.initRouteClickListeners(mMap);
+        //PolylineOptions plo = new PolylineOptions();
+        //plo.add(new LatLng(35.301000, -120.659900), new LatLng(35.300295, -120.66000),
+        //        new LatLng(35.30095, -120.659000), new LatLng(35.30000, -120.659000));
+        //plo.color(0xFFEE0000);
+        //mMap.addPolyline(plo);
     }
+
+    public GoogleMap getGoogleMap() {return mMap; }
+
+    //Prevents the map from scrolling around or zooming.
+    public void lockMap()
+    {
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
+        mMap.getUiSettings().setZoomGesturesEnabled(false);
+    }
+
+    public void unlockMap()
+    {
+        mMap.getUiSettings().setScrollGesturesEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+    }
+
+    public void displayRoute(PolylineOptions plo) { mMap.addPolyline(plo); }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -343,13 +363,13 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
     private void initRouteMaker()
     {
-        RouteCreatorFragment rcf = new RouteCreatorFragment();
+        mRCF = new RouteCreatorFragment();
         FragmentTransaction temp = getSupportFragmentManager().beginTransaction();
         if (getSupportFragmentManager().findFragmentByTag("ListFragment") != null)
             temp.remove(getSupportFragmentManager().findFragmentByTag("ListFragment"));
         if (getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment") != null)
             temp.remove(getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment"));
-        temp.add(R.id.layout_2, rcf);
+        temp.add(R.id.layout_2, mRCF);
         FrameLayout fl = (FrameLayout)findViewById(R.id.layout_2);
         fl.setVisibility(View.VISIBLE);
         fl.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
