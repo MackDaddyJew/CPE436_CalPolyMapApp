@@ -27,7 +27,8 @@ public class Building
 
     private transient ArrayList<ClassRoom> mAllClassRooms;
     private transient ArrayList<Route> mAllRoutes;
-    private transient ArrayList<String> mAllBuildingPhotos;           // contains String Paths
+    private ArrayList<String> mAllBuildingPhotos;           // contains String Paths
+    // if we add an official photo, don't want to have to search for it everytime
 
 
     public Building()
@@ -71,6 +72,7 @@ public class Building
         ArrayList<Building> allBuildings = new ArrayList<>();
         Building newBuild;
         String bName, bNumber, bDescription;
+
         int i = 0;  // start at 1 because 0 is a filler in spinner object
 
         // FIREBASE AND JSON
@@ -91,7 +93,10 @@ public class Building
                 newBuild = new Building(bNumber, bName, bDescription);
                 //allBuildings.add(newBuild);
 
-                //gson= new Gson();
+                // initialize empty arrays in Firebase
+                String imageName = "buildings/building_006.jpeg";   // use image name and put into mStorageRef.child(imageName);
+                newBuild.mAllBuildingPhotos.add(0, imageName);
+
                 String myJson = gson.toJson(newBuild);
 
                 map = new Gson().fromJson(myJson,
@@ -124,6 +129,10 @@ public class Building
     public String getBuildingName() { return mBuildingName; }
     public String getBuildingDescription(){ return mBuildingDescription; }
     public LatLng getBuildingCenter(){ return mBuildingCenter; }
+    public ArrayList<String> getAllBuildingPhotos()
+    {
+        return mAllBuildingPhotos;
+    }
 
 
 
@@ -157,10 +166,7 @@ public class Building
 
 
  // PHOTO RELATED FUNCTIONS
-    public ArrayList<String> getAllBuildingPhotos()
-    {
-        return mAllBuildingPhotos;
-    }
+
 
     //public String getBuildingPhoto
 

@@ -19,8 +19,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +38,10 @@ public class BuildingDetailFragment extends Fragment {
     private ImageView mImageView;
     private TextView mTextView;
     private int buildingIndex;
+
     private DatabaseReference mDatabaseRef;
+    private StorageReference mStorageRef;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +68,9 @@ public class BuildingDetailFragment extends Fragment {
         String buildingIndexStr = Integer.toString(buildingIndex);
         final Building buildingInst = new Building();
 
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
         mDatabaseRef.child("building").child(buildingIndexStr)
                 .addValueEventListener(new ValueEventListener() {
 
@@ -68,9 +78,12 @@ public class BuildingDetailFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // TODO
 
+                        GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>() {};
+
                         buildingInst.setBName(dataSnapshot.child("mBuildingName").getValue().toString());
                         buildingInst.setBNum(dataSnapshot.child("mBuildingNumber").getValue().toString());
                         buildingInst.setBDescription(dataSnapshot.child("mBuildingDescription").getValue().toString());
+                        buildingInst.setBPhotoList(dataSnapshot.child("mAllBuildingPhotos").getValue(t));
 
                         mTextView.setText(buildingInst.getBuildingName() + "(" + buildingInst.getBuildingNumber() + ")");
 
@@ -79,25 +92,36 @@ public class BuildingDetailFragment extends Fragment {
                         // need to format array list of strings for photos
                         //      just load the whole ArrayList, then .get(0) for first element
 
-                        ArrayList<String> importList = new ArrayList<>();
+                        //ArrayList<String> importList = new ArrayList<>();
 
                         // TODO: need part here to set values of 'importList'
-                        // test with plain text first
 
-
-
-                        /*buildingInst.setBPhotoList(importList);
+                        //buildingInst.setBPhotoList(importList);
 
 
                         if(!buildingInst.getAllBuildingPhotos().isEmpty())
                         {
-                            Uri mUri = Uri.parse(buildingInst.getAllBuildingPhotos().get(0));       // grab first associated photo
-                            mImageView.setImageURI(mUri);
+                            //String imgName =
+                            StorageReference imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(0));
+                            Log.v("LOOOOOOOOOOK", imageRef.toString());
+                            //Uri imageUri = Uri.fromFile(new File(imageRef.toString()));
+
+                            File localFile = null;
+                            try {
+                                localFile = File.createTempFile("images", ".jpeg");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            imageRef.getFile(localFile);
+                            Uri imageUri = Uri.fromFile(localFile);
+
+                            mImageView.setImageURI(imageUri);
                         }
                         else {
                             // put some place holder text
                             //  should say something like - "be the first to post a picture of this building!"
-                        }*/
+                        }
 
 
 

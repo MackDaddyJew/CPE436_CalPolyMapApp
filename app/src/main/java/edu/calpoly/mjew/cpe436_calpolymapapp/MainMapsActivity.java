@@ -61,7 +61,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     public static final int CONFIG1 = 1; //signifies Route Creator configuration
     public static final int CONFIG2 = 2; //havn't decided yet what theses are going to do. But I do need them.
 
-    private static final String IMAGE_FOLDER_BUILDINGS = "testFolder";
+    private static final String IMAGE_FOLDER_BUILDINGS = "buildings";
     private static final String FILE_PREFIX = "building_";
     private static final String FILE_EXTENSION = ".jpeg";
 
