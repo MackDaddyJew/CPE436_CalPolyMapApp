@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 
@@ -31,7 +32,7 @@ public class BuildingDetailFragment extends Fragment {
 
     private ImageView mImageView;
     private TextView mTextView;
-    String buildingName;
+    private int buildingIndex;
     private DatabaseReference mDatabaseRef;
 
     @Override
@@ -50,52 +51,75 @@ public class BuildingDetailFragment extends Fragment {
         FrameLayout ll = (FrameLayout) inflater.inflate(R.layout.fragment_building_detail, container, false);
         //((TextView)ll.findViewById(R.id.buildingDetailText)).setText("Is it working?");
 
-        buildingName = getArguments().getString("BuildingName");
-
-        FloatingActionButton fab = (FloatingActionButton) ll.findViewById(R.id.buildingDetailFab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent fabSelect = new Intent(getActivity().getApplicationContext(), fabObtions.class);
-                fabSelect.putExtra("BuildingName", buildingName);
-                startActivity(fabSelect);
-            }
-        });
-
-
         mImageView = (ImageView) ll.findViewById(R.id.buildingDetailImage);
         mTextView = (TextView) ll.findViewById(R.id.buildingDetailText);
 
-        // Wait for downloading the image
-        try {
-            java.util.concurrent.TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        buildingIndex = getArguments().getInt("BuildingIndex");
 
-        Uri mUri = Uri.parse(getArguments().getString("imageUri"));
-
-        mImageView.setImageURI(mUri);
-
-        /*String buildingNum = buildingName.split(" - ")[0];
-        int bNum =
+        // grab building info from Firebase
+        String buildingIndexStr = Integer.toString(buildingIndex);
+        final Building buildingInst = new Building();
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        mDatabaseRef.child("building").child(Integer.toString()).child("mDescription")
+        mDatabaseRef.child("building").child(buildingIndexStr)
                 .addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        mTextView.setText(dataSnapshot.getValue().toString());
+                        // TODO
+
+                        buildingInst.setBName(dataSnapshot.child("mBuildingName").getValue().toString());
+                        buildingInst.setBNum(dataSnapshot.child("mBuildingNumber").getValue().toString());
+                        buildingInst.setBDescription(dataSnapshot.child("mBuildingDescription").getValue().toString());
+
+                        mTextView.setText(buildingInst.getBuildingName() + "(" + buildingInst.getBuildingNumber() + ")");
+
+
+
+                        // need to format array list of strings for photos
+                        //      just load the whole ArrayList, then .get(0) for first element
+
+                        ArrayList<String> importList = new ArrayList<>();
+
+                        // TODO: need part here to set values of 'importList'
+                        // test with plain text first
+
+
+
+                        /*buildingInst.setBPhotoList(importList);
+
+
+                        if(!buildingInst.getAllBuildingPhotos().isEmpty())
+                        {
+                            Uri mUri = Uri.parse(buildingInst.getAllBuildingPhotos().get(0));       // grab first associated photo
+                            mImageView.setImageURI(mUri);
+                        }
+                        else {
+                            // put some place holder text
+                            //  should say something like - "be the first to post a picture of this building!"
+                        }*/
+
+
+
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
-                });*/
+                });
 
-        mTextView.setText(buildingName);
+        // assign FAB and associated function
+        FloatingActionButton fab = (FloatingActionButton) ll.findViewById(R.id.buildingDetailFab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent fabSelect = new Intent(getActivity().getApplicationContext(), fabObtions.class);
+                fabSelect.putExtra("BuildingIndex", buildingIndex);
+                startActivity(fabSelect);
+            }
+        });
+
 
         return ll;
     }

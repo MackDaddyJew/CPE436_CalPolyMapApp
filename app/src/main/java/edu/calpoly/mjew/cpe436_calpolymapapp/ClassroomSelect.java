@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class ClassroomSelect extends AppCompatActivity {
 
@@ -36,12 +37,14 @@ public class ClassroomSelect extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent in = getIntent();
-        buildingName = in.getStringExtra("BuildingName");
+        //buildingName = in.getStringExtra("BuildingName");
 
-        setTitle(buildingName + ":\nClassrooms");
+        //setTitle(buildingName + ":\nClassrooms");
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        final ArrayList<String> str_list = new ArrayList<>();
 
+        final Random rand = new Random();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addClassroom);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -54,9 +57,6 @@ public class ClassroomSelect extends AppCompatActivity {
                 if(FirebaseAuth.getInstance().getCurrentUser() != null)
                 {
 
-                    Resources res = getResources();
-                    String[] allBuildings = res.getStringArray(R.array.buildings);
-
                     // write test - FIREBASE AND JSON
                     /*Gson gson = new Gson();
                     ClassRoom testClass = new ClassRoom(56, "this is a test class");
@@ -66,12 +66,38 @@ public class ClassroomSelect extends AppCompatActivity {
                             new TypeToken<HashMap<String, Object>>() {}.getType());
                     mDatabaseRef.child("classroom").child("0").setValue(map);*/
 
+                    // write list text - FIREBASE AND JSON
+                    /*int randNum = rand.nextInt(10) + 1;
+                    final String randString = Integer.toString(randNum);
+                    str_list.add(randString);
+
+                    // comment out for read list test
+                    //mDatabaseRef.child("strings").setValue(str_list);
+
+                    // read list test - FIREBASE AND JSON
+                    mDatabaseRef.child("strings").child(randString)
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    updateTitle(randString + "->" + dataSnapshot.getValue().toString());
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });*/
+
+
                     // initialize database with buildings
+                    Resources res = getResources();
+                    String[] allBuildings = res.getStringArray(R.array.buildings);
+
                     Building.InitializeAllBuildings(allBuildings);
 
 
                     // read test - FIREBASE AND JSON
-                    mDatabaseRef.child("classroom").child("0").child("mDescription")
+                    /*mDatabaseRef.child("classroom").child("0").child("mDescription")
                            .addValueEventListener(new ValueEventListener() {
 
                             @Override
@@ -83,7 +109,7 @@ public class ClassroomSelect extends AppCompatActivity {
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
-                           });
+                           });*/
                 }
                 else
                 {

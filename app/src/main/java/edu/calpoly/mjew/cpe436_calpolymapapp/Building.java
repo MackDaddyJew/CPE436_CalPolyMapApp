@@ -30,6 +30,18 @@ public class Building
     private transient ArrayList<String> mAllBuildingPhotos;           // contains String Paths
 
 
+    public Building()
+    {
+        mBuildingNumber = "";
+        mBuildingName = "";
+        mBuildingDescription = "";
+        mBuildingCenter = null; //bCenter;
+
+        mAllClassRooms = new ArrayList<>();
+        mAllBuildingPhotos = new ArrayList<>();
+        mAllRoutes = new ArrayList<>();
+    }
+
     public Building(String bNumber, String bName, String bDescription) //, LatLng bCenter) TODO: add this param later
     {
         mBuildingNumber = bNumber;
@@ -90,10 +102,22 @@ public class Building
             }
             i++;
         }
-
-        //return allBuildings;
     }
 
+    // basic information setters
+    public void setBNum(String bNum)
+    {
+        mBuildingNumber = bNum;
+    }
+    public void setBName(String bName)
+    {
+        mBuildingName = bName;
+    }
+    public void setBDescription(String bDescription)
+    {
+        mBuildingDescription = bDescription;
+    }
+    public void setBPhotoList(ArrayList<String> bPhotoList) { mAllBuildingPhotos = bPhotoList; }
 
     // basic information return functions
     public String getBuildingNumber() { return mBuildingNumber; }

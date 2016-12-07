@@ -23,14 +23,16 @@ public class PhotoSelect extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent in = getIntent();
-        buildingName = in.getStringExtra("BuildingName");
+
+        // TODO: update to read in string
+        /*buildingName = in.getStringExtra("BuildingName");
 
         String[] nameParts = buildingName.split(" - ");
         for(String s : nameParts){
             Log.v("nameSplit", s);
-        }
+        }*/
 
-        setTitle(buildingName + ":\nPhotos");
+        //setTitle(buildingName + ":\nPhotos");
         //setTitleColor(R.color.white);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addPhoto);

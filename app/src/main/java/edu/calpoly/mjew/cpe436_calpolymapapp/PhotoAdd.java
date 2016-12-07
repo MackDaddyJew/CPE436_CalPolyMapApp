@@ -198,7 +198,7 @@ public class PhotoAdd extends AppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                userName = userName.split("com.google.android.gms.internal.")[0];
+                //userName = userName.split("com.google.android.gms.internal.")[0];
 
 
 
