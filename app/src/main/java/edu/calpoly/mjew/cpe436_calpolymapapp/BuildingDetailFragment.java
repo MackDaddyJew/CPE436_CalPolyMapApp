@@ -15,6 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -26,6 +32,7 @@ public class BuildingDetailFragment extends Fragment {
     private ImageView mImageView;
     private TextView mTextView;
     String buildingName;
+    private DatabaseReference mDatabaseRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,25 @@ public class BuildingDetailFragment extends Fragment {
         Uri mUri = Uri.parse(getArguments().getString("imageUri"));
 
         mImageView.setImageURI(mUri);
+
+        /*String buildingNum = buildingName.split(" - ")[0];
+        int bNum =
+
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        mDatabaseRef.child("building").child(Integer.toString()).child("mDescription")
+                .addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mTextView.setText(dataSnapshot.getValue().toString());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });*/
+
         mTextView.setText(buildingName);
 
         return ll;
