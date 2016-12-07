@@ -147,11 +147,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         Log.d("onMapReady: ", mMap.getCameraPosition().toString());
         if(findViewById(R.id.routeGeneration) != null)
             mRCF.initRouteClickListeners(mMap);
-        //PolylineOptions plo = new PolylineOptions();
-        //plo.add(new LatLng(35.301000, -120.659900), new LatLng(35.300295, -120.66000),
-        //        new LatLng(35.30095, -120.659000), new LatLng(35.30000, -120.659000));
-        //plo.color(0xFFEE0000);
-        //mMap.addPolyline(plo);
     }
 
     public GoogleMap getGoogleMap() {return mMap; }
