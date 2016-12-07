@@ -35,6 +35,9 @@ dependencies {
     compile 'com.google.firebase:firebase-database:9.6.0'
 
     compile 'com.android.support:design:24.2.1'
+
+    // gson stuff
+    compile 'com.google.code.gson:gson:2.8.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
