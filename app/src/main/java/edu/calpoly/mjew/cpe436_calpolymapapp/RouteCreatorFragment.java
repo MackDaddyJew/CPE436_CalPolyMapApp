@@ -27,14 +27,17 @@ public class RouteCreatorFragment extends Fragment
     private Button mSaveButton;
     private Button mResetButton;
     private CheckBox mFreezeCheckBox;
+    private Polyline shownRoute;
     private PolylineOptions routeToSave; //The final route to save all the waypoints to
     private ArrayList<LatLng> routeToMake; //a middle collection class to record waypoints. Editable.
+    //private ArrayList<Polyline> oldRoutes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         routeToSave = new PolylineOptions();
         routeToMake = new ArrayList<LatLng>();
+        shownRoute = null;
         if (container == null)
             Log.d("onCreateView Route: ", "attaching fragment. Container is: null");
         else
@@ -55,7 +58,11 @@ public class RouteCreatorFragment extends Fragment
             {
                 routeToMake.add(latLng);
                 routeToSave.add(latLng);
-                ((MainMapsActivity)getActivity()).getGoogleMap().addPolyline(routeToSave);
+                if(shownRoute != null)
+                    shownRoute.remove();
+                routeToSave = new PolylineOptions();
+                routeToSave.addAll(routeToMake);
+                shownRoute = ((MainMapsActivity) getActivity()).getGoogleMap().addPolyline(routeToSave);
             }
         });
 
@@ -68,10 +75,19 @@ public class RouteCreatorFragment extends Fragment
                 if(routeToMake.size() > 0)
                 {
                     Log.d("MACKENZIE: ", ((LatLng)routeToMake.remove(routeToMake.size()-1)).toString());
+                    Log.d("MACKENZIE: ", "All items in the list");
+                    for(int i = 0; i < routeToMake.size(); i++)
+                    {
+                        Log.d("MACKENZIE: ", routeToMake.get(i).toString());
+                    }
                 }
                 else
                     Log.d("MACKENZIE: ", "ArrayList is empty");
-                ((MainMapsActivity)getActivity()).getGoogleMap().addPolyline(routeToSave);
+                if(shownRoute != null)
+                    shownRoute.remove();
+                routeToSave = new PolylineOptions();
+                routeToSave.addAll(routeToMake);
+                shownRoute = ((MainMapsActivity)getActivity()).getGoogleMap().addPolyline(routeToSave);
             }
         });
 
