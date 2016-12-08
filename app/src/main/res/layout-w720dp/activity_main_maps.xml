@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/toplayout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity"
+              android:weightSum="1">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:popupTheme="@style/AppTheme" />
+
+    <Spinner
+        android:id="@+id/buildingSelection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/midLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/layout_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/captureImage"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Add image"
+            android:maxLines="2"/>
+
+        <FrameLayout
+            android:id="@+id/layout_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:visibility="gone">
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

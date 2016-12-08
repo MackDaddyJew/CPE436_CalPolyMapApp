@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Originally meant to be used as part of a fragment to introduce options. Now being used as the root layout
+of an activity instead.-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_fab_obtions"
