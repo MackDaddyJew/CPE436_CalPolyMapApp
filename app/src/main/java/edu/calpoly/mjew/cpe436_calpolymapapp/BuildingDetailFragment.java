@@ -59,17 +59,18 @@ public class BuildingDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-
         //View rootView = inflater.inflate(R.layout.fragment_building_detail, container, false);
         if (container == null)
             Log.d("onCreateView: ", "attaching fragment. Container is: null");
         else
             Log.d("onCreateView: ", "attaching fragment. Container is: there");
         FrameLayout ll = (FrameLayout) inflater.inflate(R.layout.fragment_building_detail, container, false);
-        //((TextView)ll.findViewById(R.id.buildingDetailText)).setText("Is it working?");
 
+        // Firebase initialization
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
+        // widget initialization
         mImageView = (ImageView) ll.findViewById(R.id.buildingDetailImage);
         mTextView = (TextView) ll.findViewById(R.id.buildingDetailText);
 
@@ -91,37 +92,37 @@ public class BuildingDetailFragment extends Fragment {
                         buildingInst.setBName(dataSnapshot.child("mBuildingName").getValue().toString());
                         buildingInst.setBNum(dataSnapshot.child("mBuildingNumber").getValue().toString());
                         buildingInst.setBDescription(dataSnapshot.child("mBuildingDescription").getValue().toString());
+
+                        // need a way to store an empty array in firebase
                         buildingInst.setBPhotoList(dataSnapshot.child("mAllBuildingPhotos").getValue(t));
 
-                        mTextView.setText(buildingInst.getBuildingName() + "(" + buildingInst.getBuildingNumber() + ")");
+                        String emptyImage = "";
 
+                        // TODO: Have this be if there is more than one photo in array
+                        StorageReference imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(0));  // TODO: change to .get(1)
 
+                        // BLESS YOU GLIDE
+                        Glide.with(getContext())
+                                .using(new FirebaseImageLoader())
+                                .load(imageRef)
+                                .into(mImageView);
 
-                        // need to format array list of strings for photos
-                        //      just load the whole ArrayList, then .get(0) for first element
-
-                        //ArrayList<String> importList = new ArrayList<>();
-
-                        // TODO: need part here to set values of 'importList'
-
-                        //buildingInst.setBPhotoList(importList);
-
-
-                        if(!buildingInst.getAllBuildingPhotos().isEmpty())
+                        if(buildingInst.getAllBuildingPhotos().size() > 1)
                         {
-                            //String imgName =
-                            StorageReference imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(0));
 
-                            Glide.with(getContext())
-                                    .using(new FirebaseImageLoader())
-                                    .load(imageRef)
-                                    .into(mImageView);
                         }
                         else {
+                            // TODO: have this be if there is only one photo in array
+                            //       have that first photo be a placeholder image
+
                             // put some place holder text
                             //  should say something like - "be the first to post a picture of this building!"
+                            emptyImage = "Be the first to add a picture for this building!";
                         }
 
+                        mTextView.setText(buildingInst.getBuildingName() + " ("
+                                + buildingInst.getBuildingNumber() + ")" + " \n"
+                                + " \n" + emptyImage);
 
 
                     }

@@ -94,7 +94,7 @@ public class Building
                 //allBuildings.add(newBuild);
 
                 // initialize empty arrays in Firebase
-                String imageName = "buildings/building_006.jpeg";   // use image name and put into mStorageRef.child(imageName);
+                String imageName = "buildings/landscape_icon.jpg";   // use image name and put into mStorageRef.child(imageName);
                 newBuild.mAllBuildingPhotos.add(0, imageName);
 
                 String myJson = gson.toJson(newBuild);
