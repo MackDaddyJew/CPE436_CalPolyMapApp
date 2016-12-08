@@ -1,7 +1,10 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -15,16 +18,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +59,9 @@ public class BuildingDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
         //View rootView = inflater.inflate(R.layout.fragment_building_detail, container, false);
         if (container == null)
             Log.d("onCreateView: ", "attaching fragment. Container is: null");
@@ -67,9 +78,6 @@ public class BuildingDetailFragment extends Fragment {
         // grab building info from Firebase
         String buildingIndexStr = Integer.toString(buildingIndex);
         final Building buildingInst = new Building();
-
-        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
         mDatabaseRef.child("building").child(buildingIndexStr)
                 .addValueEventListener(new ValueEventListener() {
@@ -103,20 +111,11 @@ public class BuildingDetailFragment extends Fragment {
                         {
                             //String imgName =
                             StorageReference imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(0));
-                            Log.v("LOOOOOOOOOOK", imageRef.toString());
-                            //Uri imageUri = Uri.fromFile(new File(imageRef.toString()));
 
-                            File localFile = null;
-                            try {
-                                localFile = File.createTempFile("images", ".jpeg");
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            imageRef.getFile(localFile);
-                            Uri imageUri = Uri.fromFile(localFile);
-
-                            mImageView.setImageURI(imageUri);
+                            Glide.with(getContext())
+                                    .using(new FirebaseImageLoader())
+                                    .load(imageRef)
+                                    .into(mImageView);
                         }
                         else {
                             // put some place holder text
