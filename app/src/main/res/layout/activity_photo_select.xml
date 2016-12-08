@@ -21,11 +21,17 @@
             android:titleTextColor="@color/white"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <GridView
-            android:id="@+id/photoGrid"
+        <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:numColumns="3"/>
+            android:layout_height="match_parent"
+            android:id="@+id/swipeRefreshGrid">
+            <GridView
+                android:id="@+id/photoGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="3"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
 </LinearLayout>
 
 

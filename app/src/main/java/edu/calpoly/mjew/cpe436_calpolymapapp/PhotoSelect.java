@@ -7,6 +7,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -48,6 +49,15 @@ public class PhotoSelect extends AppCompatActivity {
         setTitle(buildingName + ": Photos");
 
         reloadPage();
+        final SwipeRefreshLayout mSwipe = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshGrid);
+        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reloadPage();
+                mSwipe.setRefreshing(false);
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addPhoto);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +120,7 @@ public class PhotoSelect extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             if(null == convertView){
                 convertView = inflater.inflate(R.layout.grid_item_photo, parent, false);
             }
@@ -125,7 +136,9 @@ public class PhotoSelect extends AppCompatActivity {
                     .load(imageRef)
                     .into(userPosted);
 
-            photoCred.setText("Anonymous");
+            String userName = imageList[position].split("_")[1];
+
+            photoCred.setText(userName);
 
             return convertView;
         }
