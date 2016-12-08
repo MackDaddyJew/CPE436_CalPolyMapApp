@@ -33,6 +33,7 @@ public class PhotoSelect extends AppCompatActivity {
 
     private String buildingName;
     private StorageReference mStorageRef;
+    GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +47,7 @@ public class PhotoSelect extends AppCompatActivity {
                 + selectedBuilding.getBuildingName();
         setTitle(buildingName + ": Photos");
 
-        List<String> listPics = selectedBuilding.getAllBuildingPhotos();
-        String[] arrPics = listPics.toArray(new String[listPics.size()]);
-        Log.v("LOOOOOOOOOK","number of items: " + listPics.size());
-
-
-        // set up adapter for gridView
-        GridView gridView = (GridView) findViewById(R.id.photoGrid);
-        gridView.setAdapter(new ImageListAdapter(PhotoSelect.this, arrPics));
-
-        // initialize Firebase Storage reference
-        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        reloadPage();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addPhoto);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +67,29 @@ public class PhotoSelect extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        reloadPage();
+
+        Log.v("onRestart", "called");
+    }
+
+    // load or reload the page with the
+    private void reloadPage(){
+        List<String> listPics = selectedBuilding.getAllBuildingPhotos();
+        String[] arrPics = listPics.toArray(new String[listPics.size()]);
+
+        // set up adapter for gridView
+        gridView = (GridView) findViewById(R.id.photoGrid);
+        gridView.setAdapter(new ImageListAdapter(PhotoSelect.this, arrPics));
+
+        // initialize Firebase Storage reference
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
     }
 
     public class ImageListAdapter extends ArrayAdapter {
