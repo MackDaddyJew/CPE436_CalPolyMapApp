@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="200dp">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:srcCompat="@drawable/calpoly_logo"
-        android:id="@+id/userPhoto" />
+        android:id="@+id/userPostPhoto"
+        android:layout_weight=".7"/>
 
     <TextView
         android:text="TextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/photoCred" />
+        android:layout_height="0dp"
+        android:id="@+id/photoCred"
+        android:layout_weight=".2"
+        android:gravity="center_horizontal"/>
 </LinearLayout>

@@ -101,7 +101,19 @@ public class BuildingDetailFragment extends Fragment {
                         String emptyImage = "";
 
                         // TODO: Have this be if there is more than one photo in array
-                        StorageReference imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(0));  // TODO: change to .get(1)
+                        StorageReference imageRef;;
+
+
+
+                        if(buildingInst.getAllBuildingPhotos().size() == 1)
+                        {
+                            // first photo is a placeholder image
+                            imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(0));
+                            emptyImage = "Be the first to add a picture for this building!";
+                        }
+                        else {
+                            imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(1));
+                        }
 
                         // BLESS YOU GLIDE
                         Glide.with(getContext())
@@ -109,31 +121,16 @@ public class BuildingDetailFragment extends Fragment {
                                 .load(imageRef)
                                 .into(mImageView);
 
-                        if(buildingInst.getAllBuildingPhotos().size() > 1)
-                        {
-
-                        }
-                        else {
-                            // TODO: have this be if there is only one photo in array
-                            //       have that first photo be a placeholder image
-
-                            // put some place holder text
-                            //  should say something like - "be the first to post a picture of this building!"
-                            emptyImage = "Be the first to add a picture for this building!";
-                        }
-
                         mTextView.setText(buildingInst.getBuildingName() + " ("
                                 + buildingInst.getBuildingNumber() + ")" + " \n"
                                 + " \n" + emptyImage);
 
+                        // set the current selected building
                         selectedBuilding = buildingInst;
-
-
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
 
@@ -143,9 +140,6 @@ public class BuildingDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent fabSelect = new Intent(getActivity().getApplicationContext(), fabObtions.class);
-                //fabSelect.putExtra("BuildingIndex", buildingIndex);
-
-                //fabSelect.putExtras()
                 startActivity(fabSelect);
             }
         });
