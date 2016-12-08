@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -29,12 +31,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -42,12 +48,13 @@ import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBui
 
 public class PhotoAdd extends AppCompatActivity {
 
-
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_STORAGE = 1;
     private static final int REQUEST_GALLERY = 2;
 
     private String mCurrentPhotoPath;
+    private Uri mCurrentPhotoUri;
+    private int tookPic = -1;
     String buildingName;
     ImageView newPic;
 
@@ -78,11 +85,15 @@ public class PhotoAdd extends AppCompatActivity {
 
 
 
-        Button selectPic = (Button) findViewById(R.id.confirmButton);
+        Button selectPic = (Button) findViewById(R.id.selectPicButton);
         selectPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("hello", "test works");
+
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.putExtra("number", 000);
+                startActivityForResult(intent, REQUEST_GALLERY);
             }
         });
 
@@ -114,7 +125,35 @@ public class PhotoAdd extends AppCompatActivity {
             }
         });
 
+        Button confirmButton = (Button) findViewById(R.id.confirmButton);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // took a picture
+                if(tookPic == 1) {
+                    selectedBuilding.uploadUserPhoto(mCurrentPhotoPath, getContentResolver(), getApplicationContext());
+                    finish();
+                }
+                // got a picture from gallery
+                else if (tookPic == 0 ){
+                    selectedBuilding.uploadUserPhoto(mCurrentPhotoUri, getContentResolver(), getApplicationContext());
+                    finish();
+                }
+                // no picture taken or uploaded
+                else {
+                    Snackbar.make(newPic, "No photo taken or uploaded", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
 
+        Button cancelButton = (Button) findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private boolean mayRequestCamera() {
@@ -125,7 +164,7 @@ public class PhotoAdd extends AppCompatActivity {
             return true;
         }
         if (shouldShowRequestPermissionRationale(CAMERA)) {
-            Snackbar.make(newPic, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(newPic, R.string.camera_permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -147,7 +186,7 @@ public class PhotoAdd extends AppCompatActivity {
             return true;
         }
         if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-            Snackbar.make(newPic, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(newPic, R.string.external_permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -181,15 +220,24 @@ public class PhotoAdd extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
-                Bundle extras = data.getExtras();
-                //final Uri imgUri = data.getData();
+                tookPic = 1;    // took pic? - yes
 
-                // TODO: move to Confirm button?
-                selectedBuilding.uploadUserPhoto(mCurrentPhotoPath, getContentResolver(), getApplicationContext());
+                Bitmap imgBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                newPic.setImageBitmap(imgBitmap);
+            }
+            if (requestCode == REQUEST_GALLERY) {
+                final Uri uri = data.getData();
+                mCurrentPhotoUri = uri;
+                tookPic = 0;    // took pic? - no
 
-
-                //Bitmap imgBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-                //newPic.setImageBitmap(imgBitmap);
+                try {
+                    Bitmap imgBitmap = MediaStore.Images.Media
+                            .getBitmap(this.getContentResolver(), mCurrentPhotoUri);
+                    newPic.setImageBitmap(imgBitmap);
+                } catch (IOException e){
+                    Snackbar.make(newPic, "Error Reading Photo", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         }
     }

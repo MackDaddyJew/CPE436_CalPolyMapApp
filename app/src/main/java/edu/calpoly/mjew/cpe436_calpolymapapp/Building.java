@@ -145,6 +145,7 @@ public class Building
     public void setBPhotoList(ArrayList<String> bPhotoList) { mAllBuildingPhotos = bPhotoList; }
 
     // basic information return functions
+    public int getBFbId() { return mBuildingFBId; }
     public String getBuildingNumber() { return mBuildingNumber; }
     public String getBuildingName() { return mBuildingName; }
     public String getBuildingDescription(){ return mBuildingDescription; }
@@ -227,6 +228,43 @@ public class Building
         // upload photo to Firebase Storage
         Uri imageUri = Uri.fromFile(new File(currentPhotoPath));
         filePath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(context, "Photo saved to Firebase", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void uploadUserPhoto(Uri currentPhotoUri, ContentResolver contentResolver, final Context context)
+    {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+
+        String buildingNumber = this.getBuildingNumber();
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+        String pictureName = buildingNumber + "_"
+                + userName + "_"
+                + dateFormat.format(date) + ".jpeg";
+
+        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        StorageReference filePath = mStorageRef.child("buildings").child(pictureName);
+
+
+        // update Firebase building value
+        this.mAllBuildingPhotos.add(PHOTO_FOLDER_NAME + pictureName);
+        Gson gson = new Gson();
+        String myJson = gson.toJson(this);
+
+        Map map = new Gson().fromJson(myJson,
+                new TypeToken<HashMap<String, Object>>() {
+                }.getType());
+
+        mDatabaseRef.child("building").child(Integer.toString(this.getBFbId())).setValue(map);
+
+        // upload photo to Firebase Storage
+        filePath.putFile(currentPhotoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(context, "Photo saved to Firebase", Toast.LENGTH_SHORT).show();

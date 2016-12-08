@@ -69,7 +69,6 @@ public class PhotoSelect extends AppCompatActivity {
         });
     }
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -81,6 +80,7 @@ public class PhotoSelect extends AppCompatActivity {
 
     // load or reload the page with the
     private void reloadPage(){
+        // TODO: need a way to check if being used for building/class
         List<String> listPics = selectedBuilding.getAllBuildingPhotos();
         String[] arrPics = listPics.toArray(new String[listPics.size()]);
 

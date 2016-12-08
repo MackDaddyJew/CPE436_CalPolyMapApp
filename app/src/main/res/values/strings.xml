@@ -13,6 +13,10 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions." </string>
+    <string name="camera_permission_rationale">"Camera permissions are need for capturing
+        images"</string>
+    <string name="external_permission_rationale">"External storage permissions are need for
+        loading and saving information from your device." </string>
     <string name="title_activity_building_landing_page">buildingLandingPage</string>
     <string name="title_activity_route_select">RouteSelect</string>
     <string name="title_activity_photo_select">PhotoSelect</string>

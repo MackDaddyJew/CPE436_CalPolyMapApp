@@ -69,8 +69,7 @@ public class BuildingDetailFragment extends Fragment {
         FrameLayout ll = (FrameLayout) inflater.inflate(R.layout.fragment_building_detail, container, false);
 
         // Firebase initialization
-        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        initializeFirebase();
 
         // widget initialization
         mImageView = (ImageView) ll.findViewById(R.id.buildingDetailImage);
@@ -147,5 +146,10 @@ public class BuildingDetailFragment extends Fragment {
 
 
         return ll;
+    }
+
+    private void initializeFirebase(){
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
     }
 }
