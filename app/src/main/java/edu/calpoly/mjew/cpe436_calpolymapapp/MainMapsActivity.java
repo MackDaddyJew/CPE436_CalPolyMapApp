@@ -75,9 +75,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseReference;
-    private ImageView mImageView;
     private TextView mTextView;
-    private Button mCaptureImage;
 
     private String pictureName;
     private File localFile;
@@ -95,7 +93,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
         // inflate xml view!
         View inflatedView = getLayoutInflater().inflate(R.layout.fragment_building_detail, null);
-        mImageView = (ImageView) inflatedView.findViewById(R.id.buildingDetailImage);
         //mTextView = (TextView) inflatedView.findViewById(R.id.buildingDetailText);
 
         DummyArray.add(new Instruction("Test 1", getResources().getDrawable(R.drawable.cast_ic_notification_play)));
@@ -119,19 +116,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             initSpinner();
             initGoogleMap();
         }
-
-        mCaptureImage = (Button) findViewById(R.id.captureImage);
-        mCaptureImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.putExtra("number", 000);
-                startActivityForResult(intent, GALLERY_INTENT);
-            }
-        });
     }
 
     /**
@@ -232,27 +216,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         return bundle;
     }
 
-    private boolean mayRequestCamera() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(CAMERA)) {
-            Snackbar.make(mImageView, "Grant access?", Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{CAMERA}, CAPTURE_INTENT);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{CAMERA}, CAPTURE_INTENT);
-        }
-        return false;
-    }
 
     //Initializing Toolbar
     private void initToolbar()

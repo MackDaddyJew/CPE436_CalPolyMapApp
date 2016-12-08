@@ -7,31 +7,40 @@ import java.util.ArrayList;
  */
 public class ClassRoom implements Comparable
 {
-    private int mRoomNumber;
-    public String mDescription; //the string description. We may want in the future to change this to multiple strings.
+    private String mRoomNumber;
+    private String mRoomDescription; //the string description. We may want in the future to change this to multiple strings.
 
-    private ArrayList<String> mAllClassPhotos;
+    private transient ArrayList<String> mAllClassPhotos;
 
-    public ClassRoom(int cNumber, String cDescription) {
-        mRoomNumber = cNumber;
-        mDescription = cDescription;
+    public ClassRoom(){
+        mRoomNumber = "";
+        mRoomDescription = "";
     }
 
-    public int getRoomNumber() { return mRoomNumber; }
+    public ClassRoom(String cNumber, String cDescription) {
+        mRoomNumber = cNumber;
+        mRoomDescription = cDescription;
+    }
+
+    public String getCRoomNumber() { return mRoomNumber; }
+    public String getCRoomDescrip() { return mRoomDescription; }
+
+    public void setCRoomNumber(String cNum) { mRoomNumber = cNum; }        // TODO: room numbers need to be strings for 282B cases
+    public void setCRoomDescrip(String cRoomDescrip) { mRoomDescription = cRoomDescrip; }
 
 
     // used to sort list of ClassRooms in Building class
     @Override
     public int compareTo(Object cCompare)
     {
-        int compareRoom = ((ClassRoom)cCompare).getRoomNumber();
-        return this.mRoomNumber - compareRoom;
+        ClassRoom cCom = (ClassRoom) cCompare;
+        return  this.mRoomNumber.compareTo(cCom.getCRoomNumber());
     }
 
     @Override
     public String toString()
     {
         return("Room Number: " + this.mRoomNumber + ", "
-                + "Description: " + this.mDescription);
+                + "Description: " + this.mRoomDescription);
     }
 }

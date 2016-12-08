@@ -90,11 +90,17 @@ public class ClassroomSelect extends AppCompatActivity {
 
 
                     // initialize database with buildings
-                    Resources res = getResources();
-                    String[] allBuildings = res.getStringArray(R.array.buildings);
+                    if(false) {
+                        Resources res = getResources();
+                        String[] allBuildings = res.getStringArray(R.array.buildings);
 
-                    Building.InitializeAllBuildings(allBuildings);
-
+                        Building.InitializeAllBuildings(allBuildings);
+                    }
+                    if(true) {
+                        Intent addClass = new Intent(getApplicationContext(), ClassRoomAdd.class);
+                        //addClass.putExtra("BuildingName", buildingName);
+                        startActivity(addClass);
+                    }
 
                     // read test - FIREBASE AND JSON
                     /*mDatabaseRef.child("classroom").child("0").child("mDescription")

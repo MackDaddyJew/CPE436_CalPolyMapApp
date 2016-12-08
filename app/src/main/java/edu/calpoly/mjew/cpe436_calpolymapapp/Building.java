@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +47,7 @@ public class Building
     private String mBuildingDescription;
     private transient LatLng mBuildingCenter;           // TODO change from transient as they are implemented
 
-    private transient ArrayList<ClassRoom> mAllClassRooms;
+    private ArrayList<ClassRoom> mAllClassRooms;
     private transient ArrayList<Route> mAllRoutes;
     private ArrayList<String> mAllBuildingPhotos;           // contains String Paths
     // if we add an official photo, don't want to have to search for it everytime
@@ -116,6 +117,9 @@ public class Building
                 String imageName = "buildings/landscape_icon.jpg";   // use image name and put into mStorageRef.child(imageName);
                 newBuild.mAllBuildingPhotos.add(0, imageName);
 
+                ClassRoom basis = new ClassRoom("201", "Short Detail");
+                newBuild.mAllClassRooms.add(0, basis);
+
                 String myJson = gson.toJson(newBuild);
 
                 map = new Gson().fromJson(myJson,
@@ -142,6 +146,9 @@ public class Building
     {
         mBuildingDescription = bDescription;
     }
+
+    public void setBClassroomList(ArrayList<ClassRoom> bClassroomList) { mAllClassRooms = bClassroomList; }
+    public void setBRouteList(ArrayList<Route> bRouteList) { mAllRoutes = bRouteList; }
     public void setBPhotoList(ArrayList<String> bPhotoList) { mAllBuildingPhotos = bPhotoList; }
 
     // basic information return functions
@@ -161,13 +168,22 @@ public class Building
 
     //Searches all classrooms that have been added to the ArrayList for a matching room number to the given "roomNumber" parameter
     //will return null if the room number is not found;
-    public ClassRoom getClassRoom(int roomNumber)
+    public ClassRoom getClassRoom(String roomNumber)
     {
         int size = mAllClassRooms.size();
         for(int i = 0; i < size; i++)
-            if(mAllClassRooms.get(i).getRoomNumber() == roomNumber)
+            if(mAllClassRooms.get(i).getCRoomNumber().equals(roomNumber))
                 return mAllClassRooms.get(i);
         return null;
+    }
+    
+    public void loadClassRoom(ClassRoom classRoom, int index)
+    {
+        this.getAllClassRooms().add(index, classRoom);
+    }
+
+    public int getNumberOfClassRooms(){
+        return mAllClassRooms.size();
     }
 
     // for use with Grid function
@@ -176,11 +192,31 @@ public class Building
         return mAllClassRooms;
     }
 
-    public void addClassRoom(int roomNumber, String cDescription)
+
+    // need to update firebase listing too
+    // TODO: need to add photo as well
+    public void addNewClassRoom(String cRoomNumber, String cDescription)
     {
-        ClassRoom createdClassRoom = new ClassRoom(roomNumber, cDescription);
-        mAllClassRooms.add(createdClassRoom);
-        Collections.sort(mAllClassRooms);
+        ClassRoom createdClassRoom = new ClassRoom(cRoomNumber, cDescription);
+        this.mAllClassRooms.add(createdClassRoom);
+
+        for(ClassRoom cr : this.mAllClassRooms)
+        {
+            Log.v("Loooooooooook", "roomNum: " + cr.getCRoomNumber()
+                    + "| roomDesc: " + cr.getCRoomDescrip());
+        }
+
+        // sort here or right before view?
+
+        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        Gson gson = new Gson();
+        String myJson = gson.toJson(this);
+
+        Map map = new Gson().fromJson(myJson,
+                new TypeToken<HashMap<String, Object>>() {
+                }.getType());
+
+        mDatabaseRef.child("building").child(Integer.toString(this.mBuildingFBId)).setValue(map);
     }
 
  // ROUTE RELATED FUNCTIONS

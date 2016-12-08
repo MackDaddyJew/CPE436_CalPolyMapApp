@@ -78,7 +78,7 @@ public class BuildingDetailFragment extends Fragment {
         buildingIndex = getArguments().getInt("BuildingIndex");
 
         // grab building info from Firebase
-        String buildingIndexStr = Integer.toString(buildingIndex);
+        final String buildingIndexStr = Integer.toString(buildingIndex);
         final Building buildingInst = new Building();
         buildingInst.setBFbId(buildingIndex);
 
@@ -89,14 +89,43 @@ public class BuildingDetailFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // TODO
 
-                        GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>() {};
+                        GenericTypeIndicator<ArrayList<String>> phType = new GenericTypeIndicator<ArrayList<String>>() {};
+                        GenericTypeIndicator<ArrayList<ClassRoom>> crType = new GenericTypeIndicator<ArrayList<ClassRoom>>() {};
+                        GenericTypeIndicator<ArrayList<Route>> rtType = new GenericTypeIndicator<ArrayList<Route>>() {};
+
 
                         buildingInst.setBName(dataSnapshot.child("mBuildingName").getValue().toString());
                         buildingInst.setBNum(dataSnapshot.child("mBuildingNumber").getValue().toString());
-                        buildingInst.setBDescription(dataSnapshot.child("mBuildingDescription").getValue().toString());
+                        //buildingInst.setBDescription(dataSnapshot.child("mBuildingDescription").getValue().toString());
 
-                        // need a way to store an empty array in firebase
-                        buildingInst.setBPhotoList(dataSnapshot.child("mAllBuildingPhotos").getValue(t));
+                        // need way to store empty array in firebase
+
+                        // grab list of photos
+                        buildingInst.setBPhotoList(dataSnapshot.child("mAllBuildingPhotos").getValue(phType));
+                        // grab list of classrooms
+                        buildingInst.setBClassroomList(dataSnapshot.child("mAllClassRooms").getValue(crType));
+                        int loopStop =  buildingInst.getNumberOfClassRooms();
+
+                        for(int i = 0; i < loopStop; i++)
+                        {
+                            // initialize list of classes with data from firebase
+                            String classNum = dataSnapshot.child("mAllClassRooms").child(Integer.toString(i))
+                                    .child("mRoomNumber").getValue().toString();
+
+                            String classDescrip = dataSnapshot.child("mAllClassRooms").child(Integer.toString(i))
+                                    .child("mRoomDescription").getValue().toString();
+
+                            buildingInst.getAllClassRooms().get(i).setCRoomNumber(classNum);
+                            buildingInst.getAllClassRooms().get(i).setCRoomDescrip(classDescrip);
+
+                        }
+
+
+
+
+                        // grab list of routes
+                        //buildingInst.setBRouteList(dataSnapshot.child("mAllRoutes").getValue(rtType));
+
 
                         String emptyImage = "";
 

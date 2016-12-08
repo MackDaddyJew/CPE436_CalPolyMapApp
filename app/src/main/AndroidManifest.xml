@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -56,18 +56,19 @@
             android:name=".ClassroomSelect"
             android:label="@string/title_activity_classroom_select"
             android:theme="@style/AppTheme" />
-        <activity android:name=".PhotoAdd"></activity>
+        <activity android:name=".PhotoAdd" />
 
         <provider
-            android:authorities="edu.calpoly.mjew.cpe436_calpolymapapp.fileprovider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="edu.calpoly.mjew.cpe436_calpolymapapp.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/files_path">
-            </meta-data>
+                android:resource="@xml/files_path"></meta-data>
         </provider>
+
+        <activity android:name=".ClassRoomAdd"></activity>
     </application>
 
 </manifest>
