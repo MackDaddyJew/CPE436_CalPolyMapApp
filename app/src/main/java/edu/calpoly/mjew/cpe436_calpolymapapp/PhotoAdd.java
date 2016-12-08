@@ -38,6 +38,7 @@ import java.util.Date;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
 
 public class PhotoAdd extends AppCompatActivity {
 
@@ -184,41 +185,7 @@ public class PhotoAdd extends AppCompatActivity {
                 //final Uri imgUri = data.getData();
 
                 // TODO: move to Confirm button?
-                try {
-                    MediaStore.Images.Media.insertImage(
-                            getContentResolver(), mCurrentPhotoPath,
-                            "", "taken Pic");
-                } catch (FileNotFoundException fe){
-
-                }
-
-                Toast.makeText(getApplicationContext(), "Photo saved to Gallery", Toast.LENGTH_SHORT).show();
-
-                // get components of file name to upload to Firebase Storage
-                Date date = new Date();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-
-                String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                //userName = userName.split("com.google.android.gms.internal.")[0];
-
-                String buildingNumber = "B1";   //buildingName.split(" - ")[0];
-
-                String pictureName = buildingNumber + "_" + userName + "_"
-                        + dateFormat.format(date) + ".jpeg";
-
-                // need a way to check class type (i.e. buildings, classrooms, routes)
-                // default to "buildings" right now
-                StorageReference filePath = mStorageRef.child("buildings").child(pictureName);
-
-
-                Uri imageUri = Uri.fromFile(new File(mCurrentPhotoPath));
-                filePath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(), "Photo saved to Firebase", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+                selectedBuilding.uploadUserPhoto(mCurrentPhotoPath, getContentResolver(), getApplicationContext());
 
 
                 //Bitmap imgBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);

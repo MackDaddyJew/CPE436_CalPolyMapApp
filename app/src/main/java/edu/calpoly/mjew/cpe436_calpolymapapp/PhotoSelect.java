@@ -55,7 +55,6 @@ public class PhotoSelect extends AppCompatActivity {
         GridView gridView = (GridView) findViewById(R.id.photoGrid);
         gridView.setAdapter(new ImageListAdapter(PhotoSelect.this, arrPics));
 
-
         // initialize Firebase Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
 

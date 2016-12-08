@@ -1,27 +1,46 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
 import android.content.ClipData;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.fitness.data.Application;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
 
 /**
  * Created by mackenzie on 11/29/16.
  */
 public class Building
 {
+    private transient String PHOTO_FOLDER_NAME = "buildings/";
+    private transient int mBuildingFBId;          // set Firebase ID
     private String mBuildingNumber;
     private String mBuildingName;
     private String mBuildingDescription;
@@ -71,7 +90,6 @@ public class Building
     // TODO: maybe move into a BuildingHandler class?
     static public void InitializeAllBuildings(String[] allBuildingNames)
     {
-        ArrayList<Building> allBuildings = new ArrayList<>();
         Building newBuild;
         String bName, bNumber, bDescription;
 
@@ -93,7 +111,6 @@ public class Building
                 bDescription = "TO FILL IN";        // TODO - access another resource page and pass that in as another string array
 
                 newBuild = new Building(bNumber, bName, bDescription);
-                //allBuildings.add(newBuild);
 
                 // initialize empty arrays in Firebase
                 String imageName = "buildings/landscape_icon.jpg";   // use image name and put into mStorageRef.child(imageName);
@@ -112,6 +129,7 @@ public class Building
     }
 
     // basic information setters
+    public void setBFbId(int bID) { mBuildingFBId = bID; }
     public void setBNum(String bNum)
     {
         mBuildingNumber = bNum;
@@ -168,6 +186,52 @@ public class Building
 
 
  // PHOTO RELATED FUNCTIONS
-    //public uploadPhoto(){    }
+    public void uploadUserPhoto(String currentPhotoPath, ContentResolver contentResolver, final Context context){
+        try {
+            // save picture to Gallery
+            MediaStore.Images.Media.insertImage(
+                    contentResolver, currentPhotoPath,"", "taken Pic");
+        } catch (FileNotFoundException fe){
+
+        }
+
+        Toast.makeText(context, "Photo saved to Gallery", Toast.LENGTH_SHORT).show();
+
+        // get components of file name to upload to Firebase Storage
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        String buildingNumber = selectedBuilding.getBuildingNumber();
+
+        String pictureName = buildingNumber + "_"
+                + userName + "_"
+                + dateFormat.format(date) + ".jpeg";
+
+        // set up Firebase variables
+        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
+        StorageReference filePath = mStorageRef.child("buildings").child(pictureName);
+
+        // update Firebase building value
+        this.mAllBuildingPhotos.add(PHOTO_FOLDER_NAME + pictureName);
+        Gson gson = new Gson();
+        String myJson = gson.toJson(this);
+
+        Map map = new Gson().fromJson(myJson,
+                new TypeToken<HashMap<String, Object>>() {
+                }.getType());
+
+        mDatabaseRef.child("building").child(Integer.toString(this.mBuildingFBId)).setValue(map);
+
+        // upload photo to Firebase Storage
+        Uri imageUri = Uri.fromFile(new File(currentPhotoPath));
+        filePath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(context, "Photo saved to Firebase", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

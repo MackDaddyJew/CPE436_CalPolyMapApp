@@ -81,6 +81,7 @@ public class BuildingDetailFragment extends Fragment {
         // grab building info from Firebase
         String buildingIndexStr = Integer.toString(buildingIndex);
         final Building buildingInst = new Building();
+        buildingInst.setBFbId(buildingIndex);
 
         mDatabaseRef.child("building").child(buildingIndexStr)
                 .addValueEventListener(new ValueEventListener() {
