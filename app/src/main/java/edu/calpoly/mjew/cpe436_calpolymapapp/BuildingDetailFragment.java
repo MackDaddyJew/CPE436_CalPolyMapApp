@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
+
 
 /**
  * Created by mackenzie on 11/24/16.
@@ -124,6 +126,8 @@ public class BuildingDetailFragment extends Fragment {
                                 + buildingInst.getBuildingNumber() + ")" + " \n"
                                 + " \n" + emptyImage);
 
+                        selectedBuilding = buildingInst;
+
 
                     }
 
@@ -139,7 +143,9 @@ public class BuildingDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent fabSelect = new Intent(getActivity().getApplicationContext(), fabObtions.class);
-                fabSelect.putExtra("BuildingIndex", buildingIndex);
+                //fabSelect.putExtra("BuildingIndex", buildingIndex);
+
+                //fabSelect.putExtras()
                 startActivity(fabSelect);
             }
         });

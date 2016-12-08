@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
+
 public class fabObtions extends AppCompatActivity {
 
     String buildingName;
@@ -16,12 +18,12 @@ public class fabObtions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_fab_obtions);
 
-        Intent in = getIntent();
-        buildingName = in.getStringExtra("BuildingName");
+        buildingName = selectedBuilding.getBuildingNumber() + " - "
+                + selectedBuilding.getBuildingName() + " \n - Options";
 
         //setTitle(buildingName + " - Options");
         TextView title = (TextView) findViewById(R.id.buildingTitle);
-        title.setText(buildingName + " - Options");
+        title.setText(buildingName);
 
         Button navigate_button = (Button) findViewById(R.id.navButton);
         navigate_button.setOnClickListener(new View.OnClickListener() {

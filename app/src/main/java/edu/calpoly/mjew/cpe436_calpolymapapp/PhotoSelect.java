@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
+
 public class PhotoSelect extends AppCompatActivity {
 
     String buildingName;
@@ -22,18 +24,11 @@ public class PhotoSelect extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent in = getIntent();
-
         // TODO: update to read in string
-        /*buildingName = in.getStringExtra("BuildingName");
+        buildingName = selectedBuilding.getBuildingNumber() + " - "
+                + selectedBuilding.getBuildingName();
 
-        String[] nameParts = buildingName.split(" - ");
-        for(String s : nameParts){
-            Log.v("nameSplit", s);
-        }*/
-
-        //setTitle(buildingName + ":\nPhotos");
-        //setTitleColor(R.color.white);
+        setTitle(buildingName + ": Photos");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addPhoto);
         fab.setOnClickListener(new View.OnClickListener() {

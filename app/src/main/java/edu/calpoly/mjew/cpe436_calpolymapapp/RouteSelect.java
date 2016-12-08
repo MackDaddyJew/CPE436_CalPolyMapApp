@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
+
 public class RouteSelect extends AppCompatActivity {
 
     String buildingName;
@@ -19,10 +21,10 @@ public class RouteSelect extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent in = getIntent();
-        buildingName = in.getStringExtra("BuildingName");
+        buildingName = selectedBuilding.getBuildingNumber() + " - "
+                + selectedBuilding.getBuildingName();
 
-        setTitle(buildingName + ":\nRoutes");
+        setTitle(buildingName + ": Routes");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addRoute);
         fab.setOnClickListener(new View.OnClickListener() {

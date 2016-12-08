@@ -2,6 +2,8 @@ package edu.calpoly.mjew.cpe436_calpolymapapp;
 
 import android.content.ClipData;
 import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -166,8 +168,6 @@ public class Building
 
 
  // PHOTO RELATED FUNCTIONS
-
-
-    //public String getBuildingPhoto
+    //public uploadPhoto(){    }
 
 }

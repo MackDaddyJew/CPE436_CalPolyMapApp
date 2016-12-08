@@ -183,6 +183,7 @@ public class PhotoAdd extends AppCompatActivity {
                 Bundle extras = data.getExtras();
                 //final Uri imgUri = data.getData();
 
+                // TODO: move to Confirm button?
                 try {
                     MediaStore.Images.Media.insertImage(
                             getContentResolver(), mCurrentPhotoPath,
@@ -200,9 +201,7 @@ public class PhotoAdd extends AppCompatActivity {
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                 //userName = userName.split("com.google.android.gms.internal.")[0];
 
-
-
-                String buildingNumber = buildingName.split(" - ")[0];
+                String buildingNumber = "B1";   //buildingName.split(" - ")[0];
 
                 String pictureName = buildingNumber + "_" + userName + "_"
                         + dateFormat.format(date) + ".jpeg";
@@ -210,6 +209,7 @@ public class PhotoAdd extends AppCompatActivity {
                 // need a way to check class type (i.e. buildings, classrooms, routes)
                 // default to "buildings" right now
                 StorageReference filePath = mStorageRef.child("buildings").child(pictureName);
+
 
                 Uri imageUri = Uri.fromFile(new File(mCurrentPhotoPath));
                 filePath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

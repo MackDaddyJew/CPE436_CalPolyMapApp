@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
+
 public class ClassroomSelect extends AppCompatActivity {
 
     String buildingName;
@@ -36,10 +38,10 @@ public class ClassroomSelect extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent in = getIntent();
-        //buildingName = in.getStringExtra("BuildingName");
+        buildingName = selectedBuilding.getBuildingNumber() + " - "
+                + selectedBuilding.getBuildingName();
 
-        //setTitle(buildingName + ":\nClassrooms");
+        setTitle(buildingName + ": Classrooms");
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         final ArrayList<String> str_list = new ArrayList<>();
