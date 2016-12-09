@@ -247,6 +247,18 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             fl.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f));
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0)
+        {
+            getSupportFragmentManager().popBackStack();
+            findViewById(R.id.layout_2).setVisibility(View.GONE);
+        }
+        else
+            super.onBackPressed();
+    }
+
     //Initializing Spinner
     private void initSpinner()
     {
@@ -311,6 +323,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     BuildingDetailFragment bdf = new BuildingDetailFragment();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.layout_2, bdf, "BuildingDetailFragment");
+                    ft.addToBackStack("BuildingDetailFragment");
                     findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
                     bdf.setArguments(mBundle);
                     ft.commit();
