@@ -32,10 +32,16 @@
                 android:id="@+id/classroomPic" />
 
             <Button
-                android:text="Add Photo"
+                android:text="Take Photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/addClassroomPicButton" />
+                android:id="@+id/takeClassroomPicButton" />
+
+            <Button
+                android:text="Select a Photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/selectClassroomPicButton" />
         </LinearLayout>
 
         <LinearLayout
