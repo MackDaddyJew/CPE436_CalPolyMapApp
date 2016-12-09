@@ -68,6 +68,11 @@ public class BuildingDetailFragment extends Fragment {
             Log.d("onCreateView: ", "attaching fragment. Container is: there");
         FrameLayout ll = (FrameLayout) inflater.inflate(R.layout.fragment_building_detail, container, false);
 
+        if(ll.findViewById(R.id.buildingDetailLayout) == null)
+            Log.d("MACKENZIE: " , "Not using the Landscape mode file for fragment_building_detail");
+        else
+            Log.d("MACKENZIE: " , "Using the Landscape mode file for fragment_building_detail");
+
         // Firebase initialization
         initializeFirebase();
 

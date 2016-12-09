@@ -52,6 +52,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static android.Manifest.permission.CAMERA;
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
 /**
  * Meant to be Activity #1. Utilizes 2 fragments.
@@ -239,8 +241,10 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private void resetLayoutWeight()
     {
         FrameLayout fl = (FrameLayout)findViewById(R.id.layout_2);
-        fl.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                0, 0.5f));
+        if(this.getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT)
+            fl.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0.5f));
+        else if(this.getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
+            fl.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f));
     }
 
     //Initializing Spinner
@@ -332,8 +336,11 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         temp.add(R.id.layout_2, mRCF);
         FrameLayout fl = (FrameLayout)findViewById(R.id.layout_2);
         fl.setVisibility(View.VISIBLE);
-        fl.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                0, 0.05f));
+
+        if(this.getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT)
+            fl.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0.1f));
+        else if(this.getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
+            fl.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.1f));
         temp.commit();
         Log.d("MACKENZIE: ", "Commited Route creator");
     }
