@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Route
 {
     private ArrayList<LatLng> mWaypoints;
-    private ArrayList<Instruction> mInstructions;
+    private transient ArrayList<Instruction> mInstructions;
     //need some collection for images? or perhaps create a new instructions class that contains a
     // single image and a string, and mInstructions can be a collection of those.
 

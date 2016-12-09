@@ -1,11 +1,14 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
 
@@ -55,16 +58,26 @@ public class fabObtions extends AppCompatActivity {
             }
         });
 
-        Button route_button = (Button) findViewById(R.id.createRouteButton);
+        final Button route_button = (Button) findViewById(R.id.createRouteButton);
         route_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Intent routeCreatorIntent = new Intent(getApplicationContext(), MainMapsActivity.class);
-                routeCreatorIntent.putExtra("CONFIG1", MainMapsActivity.CONFIG1);
-                startActivity(routeCreatorIntent);
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                {
+                    Intent routeCreatorIntent = new Intent(getApplicationContext(), MainMapsActivity.class);
+                    routeCreatorIntent.putExtra("CONFIG1", MainMapsActivity.CONFIG1);
+                    startActivity(routeCreatorIntent);
+                }
+                else
+                {
+                    // change to an option to log in with google?
+                    Snackbar.make(route_button, "Must be logged in to add Routes", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
+
         });
     }
 }

@@ -48,7 +48,7 @@ public class Building
     private transient LatLng mBuildingCenter;           // TODO change from transient as they are implemented
 
     private ArrayList<ClassRoom> mAllClassRooms;
-    private transient ArrayList<Route> mAllRoutes;
+    private ArrayList<Route> mAllRoutes;
     private ArrayList<String> mAllBuildingPhotos;           // contains String Paths
     // if we add an official photo, don't want to have to search for it everytime
 
@@ -161,6 +161,7 @@ public class Building
     {
         return mAllBuildingPhotos;
     }
+    public ArrayList<Route> getAllBuildingRoutes() { return  mAllRoutes; }
 
 
 
@@ -210,13 +211,7 @@ public class Building
         ClassRoom createdClassRoom = new ClassRoom(cRoomNumber, cDescription);
         this.mAllClassRooms.add(createdClassRoom);
 
-        for(ClassRoom cr : this.mAllClassRooms)
-        {
-            Log.v("Loooooooooook", "roomNum: " + cr.getCRoomNumber()
-                    + "| roomDesc: " + cr.getCRoomDescrip());
-        }
-
-        // sort here or right before view?
+         // sort here or right before view?
 
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         Gson gson = new Gson();
@@ -230,9 +225,24 @@ public class Building
     }
 
  // ROUTE RELATED FUNCTIONS
+    public void addNewRoute(Route bRoute)
+    {
+        mAllRoutes.add(bRoute);
+
+        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        Gson gson = new Gson();
+        String myJson = gson.toJson(this);
+
+        Map map = new Gson().fromJson(myJson,
+                new TypeToken<HashMap<String, Object>>() {
+                }.getType());
+
+        mDatabaseRef.child("building").child(Integer.toString(this.mBuildingFBId)).setValue(map);
+    }
 
 
  // PHOTO RELATED FUNCTIONS
+    // upload photo passed in as a String path
     public void uploadUserPhoto(String currentPhotoPath, ContentResolver contentResolver, final Context context){
         try {
             // save picture to Gallery
@@ -281,6 +291,7 @@ public class Building
         });
     }
 
+    // upload User photo passed in as Uri
     public void uploadUserPhoto(Uri currentPhotoUri, ContentResolver contentResolver, final Context context)
     {
         Date date = new Date();

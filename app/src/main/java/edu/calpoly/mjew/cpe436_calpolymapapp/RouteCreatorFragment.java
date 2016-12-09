@@ -19,6 +19,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
+import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
+
 /**
  * Created by mackenzie on 12/1/16.
  */
@@ -44,6 +46,18 @@ public class RouteCreatorFragment extends Fragment
             Log.d("onCreateView Route: ", "attaching fragment. Container is: there");
         LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.fragment_route_generation, container, false);
         mSaveButton = (Button)ll.findViewById(R.id.saveButton);
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Route bR = new Route();
+                bR.replaceWaypoints(routeToMake);
+
+                selectedBuilding.addNewRoute(bR);
+                getActivity().onBackPressed();
+            }
+        });
+
         mResetButton = (Button)ll.findViewById(R.id.resetButton);
         mFreezeCheckBox = (CheckBox)ll.findViewById(R.id.freezeCheckBox);
         return ll;
