@@ -12,26 +12,33 @@
     android:orientation="vertical"
     tools:context="edu.calpoly.mjew.cpe436_calpolymapapp.PhotoAdd">
 
-    <Button
-        android:text="Capture Image"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/takePicButton"
-        android:layout_weight=".1" />
+        android:layout_weight=".3">
 
-    <Button
-        android:text="Select Image from Gallery"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/selectPicButton"
-        android:layout_weight=".1"/>
+        <Button
+            android:text="Capture Image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/takePicButton"
+            android:layout_weight=".5" />
+
+        <Button
+            android:text="Select Image from Gallery"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/selectPicButton"
+            android:layout_weight=".5"/>
+    </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/newPhoto"
         android:layout_weight=".6"
-        app:srcCompat="@drawable/ic_emptytemplate" />
+        app:srcCompat="@drawable/ic_landscape_icon" />
 
     <LinearLayout
         android:orientation="horizontal"

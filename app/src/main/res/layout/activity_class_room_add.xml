@@ -27,21 +27,24 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_emptytemplate"
-                android:id="@+id/classroomPic" />
+                android:layout_height="0dp"
+                app:srcCompat="@drawable/ic_landscape_icon"
+                android:id="@+id/classroomPic"
+                android:layout_weight=".5"/>
 
             <Button
                 android:text="Take Photo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/takeClassroomPicButton" />
+                android:layout_height="0dp"
+                android:id="@+id/takeClassroomPicButton"
+                android:layout_weight=".25"/>
 
             <Button
                 android:text="Select a Photo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/selectClassroomPicButton" />
+                android:layout_height="0dp"
+                android:id="@+id/selectClassroomPicButton"
+                android:layout_weight=".25"/>
         </LinearLayout>
 
         <LinearLayout
@@ -61,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:id="@+id/editClassroomNumber"
-                android:inputType="textNoSuggestions" />
+                android:inputType="textPhonetic" />
 
             <TextView
                 android:text="Short Description"
