@@ -65,7 +65,7 @@ public class ClassroomSelect extends AppCompatActivity {
 
         reloadPage();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addClassroom);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addClassroom);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,10 +92,8 @@ public class ClassroomSelect extends AppCompatActivity {
                     Snackbar.make(view, "Must be logged in to add Classrooms", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
-
-
             }
-        });
+        });*/
     }
 
     public void reloadPage(){
@@ -128,7 +126,7 @@ public class ClassroomSelect extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             if(null == convertView){
                 convertView = inflater.inflate(R.layout.grid_item_photo, parent, false);
@@ -150,13 +148,42 @@ public class ClassroomSelect extends AppCompatActivity {
                     .into(userPosted);
 
             String userName;
-            if(index == 1){
+            if(position > 0){
                 userName = classList[position];
             } else {
                 userName = "Add New Classroom";
             }
 
             photoCred.setText(userName);
+            userPosted.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(position == 0){
+                        // if user is authenticated, allow classroom addition
+                        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                        {
+                            // initialize database with buildings
+                            if(false) {
+                                Resources res = getResources();
+                                String[] allBuildings = res.getStringArray(R.array.buildings);
+
+                                Building.InitializeAllBuildings(allBuildings);
+                            }
+                            if(true) {
+                                Intent addClass = new Intent(getApplicationContext(), ClassRoomAdd.class);
+                                //addClass.putExtra("className", buildingName);
+                                startActivity(addClass);
+                            }
+                        }
+                        else
+                        {
+                            // change to an option to log in with google?
+                            Snackbar.make(view, "Must be logged in to add Classrooms", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    }
+                }
+            });
 
             return convertView;
         }

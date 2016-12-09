@@ -59,7 +59,7 @@ public class PhotoSelect extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addPhoto);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addPhoto);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +76,7 @@ public class PhotoSelect extends AppCompatActivity {
                         .setAction("Action", null).show();
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -119,11 +119,13 @@ public class PhotoSelect extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             if(null == convertView){
                 convertView = inflater.inflate(R.layout.grid_item_photo, parent, false);
             }
+
+            int check = (selectedBuilding.getAllBuildingPhotos().size() > 1 ? 1 : 0);
 
             StorageReference imageRef = mStorageRef.child(imageList[position]);
 
@@ -136,9 +138,36 @@ public class PhotoSelect extends AppCompatActivity {
                     .load(imageRef)
                     .into(userPosted);
 
-            String userName = imageList[position].split("_")[1];
+            String userName;
+
+            if(position > 0) {
+                userName = imageList[position].split("_")[1];
+            } else {
+                userName = "Add New Photo";
+            }
 
             photoCred.setText(userName);
+
+            userPosted.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(position == 0){
+                        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                        {
+                            Intent fabAdd = new Intent(getApplicationContext(), PhotoAdd.class);
+                            fabAdd.putExtra("BuildingName", buildingName);
+                            startActivity(fabAdd);
+                        }
+                        else
+                        {
+                            // change to an option to log in with google?
+                            Snackbar.make(view, "Must be logged in to add Photos", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    }
+                }
+            });
+
 
             return convertView;
         }

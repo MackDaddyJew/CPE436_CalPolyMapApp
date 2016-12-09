@@ -28,7 +28,7 @@
             />
     </LinearLayout>
 
-
+<!--
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addClassroom"
         android:layout_width="wrap_content"
@@ -38,6 +38,7 @@
         app:layout_anchor="@id/ClassroomGrid"
         app:srcCompat="@android:drawable/ic_menu_add"
         app:layout_anchorGravity="bottom|end|right"/>
+-->
 </FrameLayout>
 
 
