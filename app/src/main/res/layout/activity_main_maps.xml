@@ -39,4 +39,6 @@
         android:layout_weight="0.5"
         android:visibility="gone">
     </FrameLayout>
+    <!-- android:backgroundTint="@android:color/holo_red_light"
+        android:background="@android:color/holo_red_light" -->
 </LinearLayout>
