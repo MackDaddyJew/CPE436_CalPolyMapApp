@@ -344,5 +344,4 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         temp.commit();
         Log.d("MACKENZIE: ", "Commited Route creator");
     }
-
 }
