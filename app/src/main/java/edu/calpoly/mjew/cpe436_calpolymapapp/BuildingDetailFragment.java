@@ -115,9 +115,12 @@ public class BuildingDetailFragment extends Fragment {
                             String classDescrip = dataSnapshot.child("mAllClassRooms").child(Integer.toString(i))
                                     .child("mRoomDescription").getValue().toString();
 
+                            ArrayList<String> classPhotoList = dataSnapshot.child("mAllClassRooms").child(Integer.toString(i))
+                                    .child("mAllClassPhotos").getValue(phType);
+
                             buildingInst.getAllClassRooms().get(i).setCRoomNumber(classNum);
                             buildingInst.getAllClassRooms().get(i).setCRoomDescrip(classDescrip);
-
+                            buildingInst.getAllClassRooms().get(i).setCPhotoList(classPhotoList);
                         }
 
 

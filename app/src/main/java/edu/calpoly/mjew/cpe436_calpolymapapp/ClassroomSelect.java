@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,7 @@ public class ClassroomSelect extends AppCompatActivity {
         private LayoutInflater inflater;
 
         private String[] classList;
+        private String[] classPhotoList;
 
         public ImageListAdapter(Context context, String[] classList){
             super(context, R.layout.grid_item_photo, classList);
@@ -136,19 +138,23 @@ public class ClassroomSelect extends AppCompatActivity {
             ImageView userPosted  = (ImageView) convertView.findViewById(R.id.userPostPhoto);
             TextView photoCred = (TextView) convertView.findViewById(R.id.photoCred);
 
+            int index = (cr.getCAllRoomPhotos().size() > 1 ? 1 : 0);
 
-            if(cr.getCAllRoomPhotos().size() > 1) {
-                String imagePath = cr.getCRoomPhotoByIndex(1);
-                StorageReference imageRef = mStorageRef.child(imagePath);
+            String imagePath = cr.getCRoomPhotoByIndex(index);
+            StorageReference imageRef = mStorageRef.child(imagePath);
 
-                // BLESS YOU GLIDE
-                Glide.with(context)
-                        .using(new FirebaseImageLoader())
-                        .load(imageRef)
-                        .into(userPosted);
+            // BLESS YOU GLIDE
+            Glide.with(context)
+                    .using(new FirebaseImageLoader())
+                    .load(imageRef)
+                    .into(userPosted);
+
+            String userName;
+            if(index == 1){
+                userName = classList[position];
+            } else {
+                userName = "Add New Classroom";
             }
-
-            String userName = classList[position];
 
             photoCred.setText(userName);
 

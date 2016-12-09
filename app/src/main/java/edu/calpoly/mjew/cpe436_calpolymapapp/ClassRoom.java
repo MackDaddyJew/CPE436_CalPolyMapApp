@@ -41,12 +41,18 @@ public class ClassRoom implements Comparable
         mRoomNumber = "";
         mRoomDescription = "";
         mAllClassPhotos = new ArrayList<>();
+
+        String imageName = "buildings/landscape_icon.jpg";
+        mAllClassPhotos.add(0, imageName);
     }
 
     public ClassRoom(String cNumber, String cDescription) {
         mRoomNumber = cNumber;
         mRoomDescription = cDescription;
         mAllClassPhotos = new ArrayList<>();
+
+        String imageName = "buildings/landscape_icon.jpg";
+        mAllClassPhotos.add(0, imageName);
     }
 
     public String getCRoomNumber() { return mRoomNumber; }
@@ -56,6 +62,7 @@ public class ClassRoom implements Comparable
 
     public void setCRoomNumber(String cNum) { mRoomNumber = cNum; }        // TODO: room numbers need to be strings for 282B cases
     public void setCRoomDescrip(String cRoomDescrip) { mRoomDescription = cRoomDescrip; }
+    public void setCPhotoList(ArrayList<String> cPhotoList) { mAllClassPhotos = cPhotoList; }
 
 
     // used to sort list of ClassRooms in Building class
