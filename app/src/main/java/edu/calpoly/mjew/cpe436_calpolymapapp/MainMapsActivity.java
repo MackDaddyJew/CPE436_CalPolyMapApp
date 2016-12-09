@@ -61,7 +61,7 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final int CONFIG1 = 1; //signifies Route Creator configuration
-    public static final int CONFIG2 = 2; //havn't decided yet what theses are going to do. But I do need them.
+    public static final int CONFIG2 = 2; //signifies Route displayer configuration.
 
     public static Building selectedBuilding;
 
@@ -103,12 +103,20 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         DummyArray.add(new Instruction("Test 4", getResources().getDrawable(R.drawable.cast_ic_notification_skip_next)));
 
         Intent thisIntent = getIntent();
-        if(thisIntent.getIntExtra("CONFIG1", 0) == CONFIG1)
+        if(thisIntent.getIntExtra("CONFIG", 0) == CONFIG1)
         {
             Log.d("MACKENZIE: ", "Launching MainMapsActivity with route creator");
             initToolbar();
             initGoogleMap();
             initRouteMaker();
+        }
+        else if(thisIntent.getIntExtra("CONFIG", 0) == CONFIG2)
+        {
+            Route routeToShow = thisIntent.getParcelableExtra("Route");
+            resetLayoutWeight();
+            initToolbar();
+            initGoogleMap();
+            initRouteDisplay(routeToShow);
         }
         else
         {
@@ -237,7 +245,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
     }
 
-    //resets R.id.layout_2 weight back to original value of 5
+    //resets R.id.layout_2 weight back to original value of 0.5
     private void resetLayoutWeight()
     {
         FrameLayout fl = (FrameLayout)findViewById(R.id.layout_2);
@@ -279,7 +287,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                         temp.remove(getSupportFragmentManager().findFragmentByTag("BuildingDetailFragment"));
                     temp.commit();
                     findViewById(R.id.layout_2).setVisibility(View.GONE);
-                } else if (pos == 1) {
+                }
+                /*else if (pos == 1) {
                     Log.d("onItemSelected: ", "Creating a new ListFragment");
                     ListFragment lf = new ListFragment();
                     lf.setListAdapter(new ArrayAdapter<Instruction>(getApplicationContext(),
@@ -306,7 +315,8 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     ft.commit();
                     ft = null;
                     lf = null;
-                } else if (pos > 1) {
+                } */
+                else if (pos > 0) {
 
                     // get the number of the building
                     String buildingName = parent.getSelectedItem().toString();
@@ -336,6 +346,18 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    private void initRouteDisplay(Route r)
+    {
+        ListFragment lf = new ListFragment();
+        lf.setListAdapter(new ArrayAdapter(getApplicationContext(), R.layout.fragment_route_detail, r.getInstructions()));
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.layout_2, lf, "ListFragment");
+        findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
+        ft.commit();
+        ft = null;
+        lf = null;
     }
 
     private void initRouteMaker()

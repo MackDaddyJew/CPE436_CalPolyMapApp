@@ -67,7 +67,7 @@ public class fabObtions extends AppCompatActivity {
                 if(FirebaseAuth.getInstance().getCurrentUser() != null)
                 {
                     Intent routeCreatorIntent = new Intent(getApplicationContext(), MainMapsActivity.class);
-                    routeCreatorIntent.putExtra("CONFIG1", MainMapsActivity.CONFIG1);
+                    routeCreatorIntent.putExtra("CONFIG", MainMapsActivity.CONFIG1);
                     startActivity(routeCreatorIntent);
                 }
                 else
