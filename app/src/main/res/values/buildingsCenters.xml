@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="buildingsCenters">
+    <item>Select a Building</item>
+    <!-- building 1 -->
+    <item>35.301028</item>
+    <item>-120.658602</item>
+
+    <!-- building 2 -->
+    <item>36.300400</item>
+    <item>-120.664493</item>
+
+    <!-- building 3 -->
+    <item>35.300059</item>
+    <item>-120.665016</item>
+
+    <!-- building 4 -->
+    <item>35.305402</item>
+    <item>-120.664929</item>
+
+    <!-- building 5 -->
+    <item>35.300783</item>
+    <item>-120.664395</item>
+
+    <!-- building 6 -->
+    <item>35.299263</item>
+    <item>-120.656892</item>
+
+    <!-- building 7 -->
+    <item>35.302244</item>
+    <item>-120.665069</item>
+
+    <!-- building 8 -->
+    <item>35.303049</item>
+    <item>-120.661634</item>
+
+    <!-- building 9 -->
+    <item>35.304430</item>
+    <item>-120.662387</item>
+
+    <!-- building 10 -->
+    <item>35.301918</item>
+    <item>-120.661478</item>
+
+    <!-- building 11 -->
+    <item>35.302772</item>
+    <item>-120.662784</item>
+
+    <!-- building 13 -->
+    <item>35.301658</item>
+    <item>-120.6664930</item>
+
+    <!-- building 14 -->
+    <item>35.300230</item>
+    <item>-120.662249</item>
+
+    </string-array>
+
+
+
+
+</resources>
