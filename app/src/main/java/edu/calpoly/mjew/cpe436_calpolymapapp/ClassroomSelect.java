@@ -155,35 +155,6 @@ public class ClassroomSelect extends AppCompatActivity {
             }
 
             photoCred.setText(userName);
-            userPosted.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(position == 0){
-                        // if user is authenticated, allow classroom addition
-                        if(FirebaseAuth.getInstance().getCurrentUser() != null)
-                        {
-                            // initialize database with buildings
-                            if(false) {
-                                Resources res = getResources();
-                                String[] allBuildings = res.getStringArray(R.array.buildings);
-
-                                Building.InitializeAllBuildings(allBuildings);
-                            }
-                            if(true) {
-                                Intent addClass = new Intent(getApplicationContext(), ClassRoomAdd.class);
-                                //addClass.putExtra("className", buildingName);
-                                startActivity(addClass);
-                            }
-                        }
-                        else
-                        {
-                            // change to an option to log in with google?
-                            Snackbar.make(view, "Must be logged in to add Classrooms", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
-                        }
-                    }
-                }
-            });
 
             return convertView;
         }

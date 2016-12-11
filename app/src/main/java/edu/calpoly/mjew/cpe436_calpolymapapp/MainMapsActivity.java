@@ -1,19 +1,10 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
-import android.annotation.TargetApi;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,13 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,23 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.Frame;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-import static android.Manifest.permission.CAMERA;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
@@ -61,46 +32,20 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final int CONFIG1 = 1; //signifies Route Creator configuration
-    public static final int CONFIG2 = 2; //signifies Route displayer configuration.
 
     public static Building selectedBuilding;
-
-    private static final String IMAGE_FOLDER_BUILDINGS = "buildings";
-    private static final String FILE_PREFIX = "building_";
-    private static final String FILE_EXTENSION = ".jpeg";
-
-    private static final int GALLERY_INTENT = 5;
-    private static final int CAPTURE_INTENT = 1;
+    public static Context appContext;
+    public static ContentResolver appContentResolver;
 
     private GoogleMap mMap;
     RouteCreatorFragment mRCF;
-
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseReference;
-    private TextView mTextView;
-
-    private String pictureName;
-    private File localFile;
-    private Uri imageUri;
-
-    ArrayList<Instruction> DummyArray = new ArrayList<Instruction>();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_maps);
 
-        // initialize Firebase Database
-        initDatabase();
 
-        // inflate xml view!
-        View inflatedView = getLayoutInflater().inflate(R.layout.fragment_building_detail, null);
-        //mTextView = (TextView) inflatedView.findViewById(R.id.buildingDetailText);
-
-        DummyArray.add(new Instruction("Test 1", getResources().getDrawable(R.drawable.cast_ic_notification_play)));
-        DummyArray.add(new Instruction("Test 2", getResources().getDrawable(R.drawable.cast_ic_notification_forward)));
-        DummyArray.add(new Instruction("Test 3", getResources().getDrawable(R.drawable.cast_ic_notification_connecting)));
-        DummyArray.add(new Instruction("Test 4", getResources().getDrawable(R.drawable.cast_ic_notification_skip_next)));
 
         Intent thisIntent = getIntent();
         if(thisIntent.getIntExtra("CONFIG", 0) == CONFIG1)
@@ -110,14 +55,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             initGoogleMap();
             initRouteMaker();
         }
-        else if(thisIntent.getIntExtra("CONFIG", 0) == CONFIG2)
-        {
-            Route routeToShow = thisIntent.getParcelableExtra("Route");
-            resetLayoutWeight();
-            initToolbar();
-            initGoogleMap();
-            initRouteDisplay(routeToShow);
-        }
+
         else
         {
             //Main configuration for map
@@ -126,6 +64,9 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
             initSpinner();
             initGoogleMap();
         }
+
+        appContext = getApplicationContext();
+        appContentResolver = getContentResolver();
     }
 
     /**
@@ -161,71 +102,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     public void displayRoute(PolylineOptions plo) { mMap.addPolyline(plo); }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
-            final Uri uri = data.getData();
-
-            Date date = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-
-            pictureName = FILE_PREFIX + dateFormat.format(date) + FILE_EXTENSION;
-
-            //StorageReference filePath = mStorageRef.child("pictures").child(uri.getLastPathSegment());
-            StorageReference filePath = mStorageRef.child("classrooms/").child(pictureName);
-
-            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(MainMapsActivity.this, "Upload done", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(MainMapsActivity.this, "Upload failed", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        if (requestCode == CAPTURE_INTENT && resultCode == RESULT_OK) {
-            //Toast.makeText(MainMapsActivity.this, "Handle image", Toast.LENGTH_SHORT).show();
-
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-
-        }
-    }
-
-    public void initDatabase() {
-        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
-        //mStorageRef = FirebaseStorage.getInstance().getReference();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-    }
-
-    public Bundle getImageFromDatabase(String imageNumber) {
-
-        Bundle bundle = new Bundle();
-
-        String imageName = IMAGE_FOLDER_BUILDINGS + "/" + FILE_PREFIX + imageNumber + FILE_EXTENSION;
-        StorageReference imageRef = mStorageRef.child(imageName);
-
-        localFile = null;
-        try {
-            localFile = File.createTempFile("images", FILE_EXTENSION);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        imageRef.getFile(localFile);
-        imageUri = Uri.fromFile(localFile);
-        bundle.putString("imageUri", imageUri.toString());
-
-        return bundle;
-    }
-
 
     //Initializing Toolbar
     private void initToolbar()
@@ -288,45 +164,13 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     temp.commit();
                     findViewById(R.id.layout_2).setVisibility(View.GONE);
                 }
-                /*else if (pos == 1) {
-                    Log.d("onItemSelected: ", "Creating a new ListFragment");
-                    ListFragment lf = new ListFragment();
-                    lf.setListAdapter(new ArrayAdapter<Instruction>(getApplicationContext(),
-                            R.layout.fragment_route_detail, DummyArray) {
-                        @Override
-                        public View getView(int pos, View convertView, ViewGroup parent) {
-                            LinearLayout rtn;
-                            TextView tv;
-                            ImageView iv;
-                            if (convertView == null)
-                                rtn = (LinearLayout) getLayoutInflater().inflate(R.layout.fragment_route_detail, parent, false);
-                            else
-                                rtn = (LinearLayout) convertView;
-                            tv = (TextView) rtn.findViewById(R.id.instructionText);
-                            iv = (ImageView) rtn.findViewById(R.id.instructionImage);
-                            tv.setText(getItem(pos).getText());
-                            iv.setImageDrawable(getItem(pos).getImage());
-                            return rtn;
-                        }
-                    });
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.layout_2, lf, "ListFragment");
-                    findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
-                    ft.commit();
-                    ft = null;
-                    lf = null;
-                } */
                 else if (pos > 0) {
 
                     // get the number of the building
                     String buildingName = parent.getSelectedItem().toString();
-                    String buildingNumber = buildingName.substring(0, 3);
-
-                    //Toast.makeText(MainMapsActivity.this, "name of building: " + buildingName, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(MainMapsActivity.this, "number of building: " + buildingNumber, Toast.LENGTH_SHORT).show();
 
                     // access picture from database
-                    Bundle mBundle = getImageFromDatabase(buildingNumber);
+                    Bundle mBundle = new Bundle();
                     mBundle.putInt("BuildingIndex", pos);
 
                     Log.d("onItemSelected: ", "Creating a new BuildingDetailFragment");
@@ -348,17 +192,6 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
-    private void initRouteDisplay(Route r)
-    {
-        ListFragment lf = new ListFragment();
-        lf.setListAdapter(new ArrayAdapter(getApplicationContext(), R.layout.fragment_route_detail, r.getInstructions()));
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.layout_2, lf, "ListFragment");
-        findViewById(R.id.layout_2).setVisibility(View.VISIBLE);
-        ft.commit();
-        ft = null;
-        lf = null;
-    }
 
     private void initRouteMaker()
     {

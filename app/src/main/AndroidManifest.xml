@@ -43,20 +43,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainMapsActivity" />
-        <activity android:name=".fabObtions" />
-        <activity
-            android:name=".RouteSelect"
-            android:label="@string/title_activity_route_select"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".PhotoSelect"
-            android:label="@string/title_activity_photo_select"
-            android:theme="@style/AppTheme" />
         <activity
             android:name=".ClassroomSelect"
             android:label="@string/title_activity_classroom_select"
             android:theme="@style/AppTheme" />
-        <activity android:name=".PhotoAdd" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -1,17 +1,20 @@
 package edu.calpoly.mjew.cpe436_calpolymapapp;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,7 +81,6 @@ public class BuildingDetailFragment extends Fragment {
         initializeFirebase();
 
         // widget initialization
-        mImageView = (ImageView) ll.findViewById(R.id.buildingDetailImage);
         mTextView = (TextView) ll.findViewById(R.id.buildingDetailText);
 
         buildingIndex = getArguments().getInt("BuildingIndex");
@@ -103,64 +106,41 @@ public class BuildingDetailFragment extends Fragment {
                         buildingInst.setBNum(dataSnapshot.child("mBuildingNumber").getValue().toString());
                         //buildingInst.setBDescription(dataSnapshot.child("mBuildingDescription").getValue().toString());
 
+                        // grab list of routes
+                        buildingInst.setBRouteList(dataSnapshot.child("mAllRoutes").getValue(rtType));
+
                         // need way to store empty array in firebase
 
-                        // grab list of photos
-                        buildingInst.setBPhotoList(dataSnapshot.child("mAllBuildingPhotos").getValue(phType));
                         // grab list of classrooms
-                        buildingInst.setBClassroomList(dataSnapshot.child("mAllClassRooms").getValue(crType));
-                        int loopStop =  buildingInst.getNumberOfClassRooms();
+                        //buildingInst.setBClassroomList(dataSnapshot.child("mAllClassRooms").getValue(crType));
+                        int loopStop =  buildingInst.getAllBuildingRoutes().size();
 
                         for(int i = 0; i < loopStop; i++)
                         {
                             // initialize list of classes with data from firebase
-                            String classNum = dataSnapshot.child("mAllClassRooms").child(Integer.toString(i))
-                                    .child("mRoomNumber").getValue().toString();
+                            String createName = dataSnapshot.child("mAllRoutes").child(Integer.toString(i))
+                                    .child("mCreatorName").getValue().toString();
 
-                            String classDescrip = dataSnapshot.child("mAllClassRooms").child(Integer.toString(i))
-                                    .child("mRoomDescription").getValue().toString();
+                            String snapshot = dataSnapshot.child("mAllRoutes").child(Integer.toString(i))
+                                    .child("mMapSnapshot").getValue().toString();
 
-                            ArrayList<String> classPhotoList = dataSnapshot.child("mAllClassRooms").child(Integer.toString(i))
-                                    .child("mAllClassPhotos").getValue(phType);
-
-                            buildingInst.getAllClassRooms().get(i).setCRoomNumber(classNum);
-                            buildingInst.getAllClassRooms().get(i).setCRoomDescrip(classDescrip);
-                            buildingInst.getAllClassRooms().get(i).setCPhotoList(classPhotoList);
+                            buildingInst.getAllBuildingRoutes().get(i).setCreateName(createName);
+                            buildingInst.getAllBuildingRoutes().get(i).setSnapshotPath(snapshot);
+                            //buildingInst.getAllClassRooms().get(i).setCPhotoList(classPhotoList);
                         }
 
 
 
-
-                        // grab list of routes
-                        //buildingInst.setBRouteList(dataSnapshot.child("mAllRoutes").getValue(rtType));
-
-
-                        String emptyImage = "";
-
-                        // TODO: Have this be if there is more than one photo in array
-                        StorageReference imageRef;;
-
-
-
-                        if(buildingInst.getAllBuildingPhotos().size() == 1)
-                        {
-                            // first photo is a placeholder image
-                            imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(0));
-                            emptyImage = "Be the first to add a picture for this building!";
-                        }
-                        else {
-                            imageRef = mStorageRef.child(buildingInst.getAllBuildingPhotos().get(1));
-                        }
+                        /*imageRef = mStorageRef.child(buildingInst.getBuildingPhoto());
 
                         // BLESS YOU GLIDE
                         Glide.with(getContext())
                                 .using(new FirebaseImageLoader())
                                 .load(imageRef)
-                                .into(mImageView);
+                                .into(mImageView);*/
 
                         mTextView.setText(buildingInst.getBuildingName() + " ("
-                                + buildingInst.getBuildingNumber() + ")" + " \n"
-                                + " \n" + emptyImage);
+                                + buildingInst.getBuildingNumber() + ")");
 
                         // set the current selected building
                         selectedBuilding = buildingInst;
@@ -176,11 +156,33 @@ public class BuildingDetailFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent fabSelect = new Intent(getActivity().getApplicationContext(), fabObtions.class);
-                startActivity(fabSelect);
+                // initialize database with buildings
+                    Resources res = getResources();
+                    String[] allBuildings = res.getStringArray(R.array.buildings);
+
+                    Building.InitializeAllBuildings(allBuildings);
             }
         });
 
+        final Button createRoute = (Button) ll.findViewById(R.id.newRouteButton);
+        createRoute.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                {
+                    Intent routeCreatorIntent = new Intent(getContext(), MainMapsActivity.class);
+                    routeCreatorIntent.putExtra("CONFIG", MainMapsActivity.CONFIG1);
+                    startActivity(routeCreatorIntent);
+                }
+                else
+                {
+                    Snackbar.make(createRoute, "Must be logged in to add Routes", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
 
         return ll;
     }

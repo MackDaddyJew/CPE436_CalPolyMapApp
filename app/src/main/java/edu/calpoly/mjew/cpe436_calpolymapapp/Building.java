@@ -47,9 +47,8 @@ public class Building
     private String mBuildingDescription;
     private transient LatLng mBuildingCenter;           // TODO change from transient as they are implemented
 
-    private ArrayList<ClassRoom> mAllClassRooms;
+    private transient ArrayList<ClassRoom> mAllClassRooms;
     private ArrayList<Route> mAllRoutes;
-    private ArrayList<String> mAllBuildingPhotos;           // contains String Paths
     // if we add an official photo, don't want to have to search for it everytime
 
 
@@ -61,7 +60,6 @@ public class Building
         mBuildingCenter = null; //bCenter;
 
         mAllClassRooms = new ArrayList<>();
-        mAllBuildingPhotos = new ArrayList<>();
         mAllRoutes = new ArrayList<>();
     }
 
@@ -73,7 +71,6 @@ public class Building
         mBuildingCenter = null; //bCenter;
 
         mAllClassRooms = new ArrayList<>();
-        mAllBuildingPhotos = new ArrayList<>();
         mAllRoutes = new ArrayList<>();
     }
 
@@ -113,12 +110,14 @@ public class Building
 
                 newBuild = new Building(bNumber, bName, bDescription);
 
-                // initialize empty arrays in Firebase
-                String imageName = "buildings/landscape_icon.jpg";   // use image name and put into mStorageRef.child(imageName);
-                newBuild.mAllBuildingPhotos.add(0, imageName);
+                //ClassRoom basis = new ClassRoom("201", "Short Detail");
+                //newBuild.mAllClassRooms.add(0, basis);
 
-                ClassRoom basis = new ClassRoom("201", "Short Detail");
-                newBuild.mAllClassRooms.add(0, basis);
+                Route basis = new Route();
+                basis.setCreateName("");
+                basis.setSnapshotPath("");
+
+                newBuild.mAllRoutes.add(0, basis);
 
                 String myJson = gson.toJson(newBuild);
 
@@ -149,7 +148,6 @@ public class Building
 
     public void setBClassroomList(ArrayList<ClassRoom> bClassroomList) { mAllClassRooms = bClassroomList; }
     public void setBRouteList(ArrayList<Route> bRouteList) { mAllRoutes = bRouteList; }
-    public void setBPhotoList(ArrayList<String> bPhotoList) { mAllBuildingPhotos = bPhotoList; }
 
     // basic information return functions
     public int getBFbId() { return mBuildingFBId; }
@@ -157,10 +155,7 @@ public class Building
     public String getBuildingName() { return mBuildingName; }
     public String getBuildingDescription(){ return mBuildingDescription; }
     public LatLng getBuildingCenter(){ return mBuildingCenter; }
-    public ArrayList<String> getAllBuildingPhotos()
-    {
-        return mAllBuildingPhotos;
-    }
+
     public ArrayList<Route> getAllBuildingRoutes() { return  mAllRoutes; }
 
 
@@ -176,15 +171,6 @@ public class Building
             if(mAllClassRooms.get(i).getCRoomNumber().equals(roomNumber))
                 return mAllClassRooms.get(i);
         return null;
-    }
-    
-    public void loadClassRoom(ClassRoom classRoom, int index)
-    {
-        this.getAllClassRooms().add(index, classRoom);
-    }
-
-    public int getNumberOfClassRooms(){
-        return mAllClassRooms.size();
     }
 
     // for use with Grid function
@@ -243,7 +229,7 @@ public class Building
 
  // PHOTO RELATED FUNCTIONS
     // upload photo passed in as a String path
-    public void uploadUserPhoto(String currentPhotoPath, ContentResolver contentResolver, final Context context){
+    /*public void uploadMapSnapshot(String currentPhotoPath, ContentResolver contentResolver, final Context context){
         try {
             // save picture to Gallery
             MediaStore.Images.Media.insertImage(
@@ -271,7 +257,6 @@ public class Building
         StorageReference filePath = mStorageRef.child("buildings").child(pictureName);
 
         // update Firebase building value
-        this.mAllBuildingPhotos.add(PHOTO_FOLDER_NAME + pictureName);
         Gson gson = new Gson();
         String myJson = gson.toJson(this);
 
@@ -289,44 +274,5 @@ public class Building
                 Toast.makeText(context, "Photo saved to Firebase", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    // upload User photo passed in as Uri
-    public void uploadUserPhoto(Uri currentPhotoUri, ContentResolver contentResolver, final Context context)
-    {
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-
-        String buildingNumber = this.getBuildingNumber();
-        String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-
-        String pictureName = buildingNumber + "_"
-                + userName + "_"
-                + dateFormat.format(date) + ".jpeg";
-
-        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://campusmap-7973e.appspot.com");
-        StorageReference filePath = mStorageRef.child("buildings").child(pictureName);
-
-
-        // update Firebase building value
-        this.mAllBuildingPhotos.add(PHOTO_FOLDER_NAME + pictureName);
-        Gson gson = new Gson();
-        String myJson = gson.toJson(this);
-
-        Map map = new Gson().fromJson(myJson,
-                new TypeToken<HashMap<String, Object>>() {
-                }.getType());
-
-        mDatabaseRef.child("building").child(Integer.toString(this.getBFbId())).setValue(map);
-
-        // upload photo to Firebase Storage
-        filePath.putFile(currentPhotoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(context, "Photo saved to Firebase", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
+    }*/
 }

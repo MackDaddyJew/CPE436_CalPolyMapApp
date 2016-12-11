@@ -2,28 +2,43 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/routeGeneration"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="90dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Save Route"/>
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Reset Waypoint"/>
+
+        <CheckBox
+            android:id="@+id/freezeCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Lock Map"/>
+    </LinearLayout>
 
     <Button
-        android:id="@+id/saveButton"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight=".33"
-        android:text="Save Route"/>
+        android:text="Cancel Route Creation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/cancelRouteCreate"
+        android:layout_weight=".7" />
 
-    <Button
-        android:id="@+id/resetButton"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight=".33"
-        android:text="Reset Waypoint"/>
-
-    <CheckBox
-        android:id="@+id/freezeCheckBox"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight=".33"
-        android:text="Lock Map"/>
 </LinearLayout>

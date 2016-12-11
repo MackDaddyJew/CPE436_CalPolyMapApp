@@ -41,10 +41,11 @@ public class ClassRoomAdd extends AppCompatActivity {
     private String classroomNum;
 
 
+/*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_class_room_add);
+        //setContentView(R.layout.activity_class_room_add);
 
         final EditText classNumView = (EditText) findViewById(R.id.editClassroomNumber);
         final EditText classDescripView = (EditText) findViewById(R.id.editClassroomDescrip);
@@ -225,5 +226,5 @@ public class ClassRoomAdd extends AppCompatActivity {
                 }
             }
         }
-    }
+    }*/
 }
