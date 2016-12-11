@@ -45,7 +45,7 @@ public class Building
     private String mBuildingNumber;
     private String mBuildingName;
     private String mBuildingDescription;
-    private transient LatLng mBuildingCenter;           // TODO change from transient as they are implemented
+    private LatLng mBuildingCenter;           // TODO change from transient as they are implemented
 
     private transient ArrayList<ClassRoom> mAllClassRooms;
     private ArrayList<Route> mAllRoutes;
@@ -86,10 +86,11 @@ public class Building
     // initialize database with buildings
     //      only ever need to call this once
     // TODO: maybe move into a BuildingHandler class?
-    static public void InitializeAllBuildings(String[] allBuildingNames)
+    static public void InitializeAllBuildings(String[] allBuildingNames, ArrayList<Double> allCoords)
     {
         Building newBuild;
         String bName, bNumber, bDescription;
+        LatLng bCenter;// = new LatLng(35.301028, -120.658602);
 
         int i = 0;  // start at 1 because 0 is a filler in spinner object
 
@@ -108,7 +109,13 @@ public class Building
                 bName = s.split(" - ")[1];
                 bDescription = "TO FILL IN";        // TODO - access another resource page and pass that in as another string array
 
+                int j = i*2;
+
                 newBuild = new Building(bNumber, bName, bDescription);
+
+                bCenter = new LatLng(allCoords.get(j), allCoords.get(j+1));
+
+                newBuild.setBCenter(bCenter);
 
                 //ClassRoom basis = new ClassRoom("201", "Short Detail");
                 //newBuild.mAllClassRooms.add(0, basis);
@@ -145,6 +152,7 @@ public class Building
     {
         mBuildingDescription = bDescription;
     }
+    public void setBCenter (LatLng bCenter) { mBuildingCenter = bCenter; }
 
     public void setBClassroomList(ArrayList<ClassRoom> bClassroomList) { mAllClassRooms = bClassroomList; }
     public void setBRouteList(ArrayList<Route> bRouteList) { mAllRoutes = bRouteList; }

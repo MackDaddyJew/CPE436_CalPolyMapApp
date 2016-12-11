@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +40,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static edu.calpoly.mjew.cpe436_calpolymapapp.MainMapsActivity.selectedBuilding;
@@ -97,22 +100,23 @@ public class BuildingDetailFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // TODO
 
-                        GenericTypeIndicator<ArrayList<String>> phType = new GenericTypeIndicator<ArrayList<String>>() {};
-                        GenericTypeIndicator<ArrayList<ClassRoom>> crType = new GenericTypeIndicator<ArrayList<ClassRoom>>() {};
                         GenericTypeIndicator<ArrayList<Route>> rtType = new GenericTypeIndicator<ArrayList<Route>>() {};
-
 
                         buildingInst.setBName(dataSnapshot.child("mBuildingName").getValue().toString());
                         buildingInst.setBNum(dataSnapshot.child("mBuildingNumber").getValue().toString());
                         //buildingInst.setBDescription(dataSnapshot.child("mBuildingDescription").getValue().toString());
 
+                        // get Building center
+                        Map data = (HashMap) dataSnapshot.child("mBuildingCenter").getValue();
+                        double bLat = (double) (data.get("latitude"));
+                        double bLong = (double) (data.get("longitude"));
+                        LatLng bCenter = new LatLng(bLat, bLong);
+
+                        buildingInst.setBCenter(bCenter);
+                        ((MainMapsActivity) getActivity()).resetMarker(bCenter, buildingInst.getBuildingNumber() + " - " + buildingInst.getBuildingName());
+
                         // grab list of routes
                         buildingInst.setBRouteList(dataSnapshot.child("mAllRoutes").getValue(rtType));
-
-                        // need way to store empty array in firebase
-
-                        // grab list of classrooms
-                        //buildingInst.setBClassroomList(dataSnapshot.child("mAllClassRooms").getValue(crType));
                         int loopStop =  buildingInst.getAllBuildingRoutes().size();
 
                         for(int i = 0; i < loopStop; i++)
@@ -126,7 +130,6 @@ public class BuildingDetailFragment extends Fragment {
 
                             buildingInst.getAllBuildingRoutes().get(i).setCreateName(createName);
                             buildingInst.getAllBuildingRoutes().get(i).setSnapshotPath(snapshot);
-                            //buildingInst.getAllClassRooms().get(i).setCPhotoList(classPhotoList);
                         }
 
 
@@ -160,7 +163,15 @@ public class BuildingDetailFragment extends Fragment {
                     Resources res = getResources();
                     String[] allBuildings = res.getStringArray(R.array.buildings);
 
-                    Building.InitializeAllBuildings(allBuildings);
+                    String[] allCoords = res.getStringArray(R.array.buildingsCenters);
+                    ArrayList<Double> allCoordsNum = new ArrayList<>();
+                    for (String tempString : allCoords) {
+                        Double newCoord = Double.parseDouble(tempString);
+                        allCoordsNum.add(newCoord);
+                    }
+
+
+                Building.InitializeAllBuildings(allBuildings, allCoordsNum);
             }
         });
 

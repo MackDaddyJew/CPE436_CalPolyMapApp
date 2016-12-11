@@ -1,58 +1,327 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="buildingsCenters">
-    <item>Select a Building</item>
-    <!-- building 1 -->
-    <item>35.301028</item>
-    <item>-120.658602</item>
-
-    <!-- building 2 -->
-    <item>36.300400</item>
-    <item>-120.664493</item>
-
-    <!-- building 3 -->
-    <item>35.300059</item>
-    <item>-120.665016</item>
-
-    <!-- building 4 -->
-    <item>35.305402</item>
-    <item>-120.664929</item>
-
-    <!-- building 5 -->
-    <item>35.300783</item>
-    <item>-120.664395</item>
-
-    <!-- building 6 -->
-    <item>35.299263</item>
-    <item>-120.656892</item>
-
-    <!-- building 7 -->
-    <item>35.302244</item>
-    <item>-120.665069</item>
-
-    <!-- building 8 -->
-    <item>35.303049</item>
-    <item>-120.661634</item>
-
-    <!-- building 9 -->
-    <item>35.304430</item>
-    <item>-120.662387</item>
-
-    <!-- building 10 -->
-    <item>35.301918</item>
-    <item>-120.661478</item>
-
-    <!-- building 11 -->
-    <item>35.302772</item>
-    <item>-120.662784</item>
-
-    <!-- building 13 -->
-    <item>35.301658</item>
-    <item>-120.6664930</item>
-
-    <!-- building 14 -->
-    <item>35.300230</item>
-    <item>-120.662249</item>
+    <!-- 'Select a Building' -->
+     <item>35.300972</item>
+     <item>-120.659001</item>
+       <!-- Building 1 -->
+       <item>35.301096</item>
+       <item>-120.658600</item>
+       <!-- Building 2 -->
+       <item>35.003316</item>
+       <item>-120.664514</item>
+       <!-- Building 3 -->
+       <item>35.299898</item>
+       <item>-120.664878</item>
+       <!-- Building 4. -->
+       <item>35.305637</item>
+       <item>-120.664756</item>
+       <!-- Building 5 -->
+       <item>35.300860</item>
+       <item>-120.664471</item>
+       <!-- Building 6 -->
+       <item>35.299420</item>
+       <item>-120.657139</item>
+       <!-- Building 7 -->
+       <item>35.302211</item>
+       <item>-120.665142</item>
+       <!-- Building 8 -->
+       <item>35.303087</item>
+       <item>-120.661633</item>
+       <!-- Building 9 -->
+       <item>35.304328</item>
+       <item>-120.662371</item>
+       <!-- Building 10 -->
+       <item>35.301896</item>
+       <item>-120.661440</item>
+       <!-- Building 11 -->
+       <item>35.302842</item>
+       <item>-120.662905</item>
+       <!-- Building 13 -->
+       <item>35.301602</item>
+       <item>-120.665162</item>
+       <!-- Building 14 -->
+       <item>35.300166</item>
+       <item>-120.662619</item>
+       <!-- Building 15 -->
+       <item>35.303167</item>
+       <item>-120.660347</item>
+       <!-- Building 16 -->
+       <item>35.306966</item>
+       <item>-120.663031</item>
+       <!-- Building 17 -->
+       <item>35.302696</item>
+       <item>-120.668346</item>
+       <!-- Building 18 -->
+       <item>35.307189</item>
+       <item>-120.672571</item>
+       <!-- Building 18A -->
+       <item>35.307528</item>
+       <item>-120.671640</item>
+       <!-- Building 19 -->
+       <item>35.299605</item>
+       <item>-120.659810</item>
+       <!-- Building 20 -->
+       <item>35.300375</item>
+       <item>-120.661686</item>
+       <!-- Building 21 -->
+       <item>35.299686</item>
+       <item>-120.663156</item>
+       <!-- Building 22 -->
+       <item>35.302367</item>
+       <item>-120.660955</item>
+       <!-- Building 24 -->
+       <item>35.303627</item>
+       <item>-120.663064</item>
+       <!-- Building 25 -->
+       <item>35.301147</item>
+       <item>-120.659222</item>
+       <!-- Building 26 -->
+       <item>35.299382</item>
+       <item>-120.661943</item>
+       <!-- Building 26M -->
+       <item>35.298929</item>
+       <item>-120.661671</item>
+       <!-- Building 27 -->
+       <item>35.297802</item>
+       <item>-120.661375</item>
+       <!-- Building 28 -->
+       <item>35.297526</item>
+       <item>-120.662089</item>
+       <!-- Building 31 -->
+       <item>35.301947</item>
+       <item>-120.657577</item>
+       <!-- Building 32 -->
+       <item>35.309529</item>
+       <item>-120.664548</item>
+       <!-- Building 33 -->
+       <item>35.302195</item>
+       <item>-120.659407</item>
+       <!-- Building 34 -->
+       <item>35.301130</item>
+       <item>-120.663373</item>
+       <!-- Building 35 -->
+       <item>35.301940</item>
+       <item>-120.665162</item>
+       <!-- Building 36 -->
+       <item>35.303915</item>
+       <item>-120.661771</item>
+       <!-- Building 38 -->
+       <item>35.301689</item>
+       <item>-120.662354</item>
+       <!-- Building 40 -->
+       <item>35.299273</item>
+       <item>-120.660847</item>
+       <!-- Building 41 -->
+       <item>35.302524</item>
+       <item>-120.665883</item>
+       <!-- Building 42 -->
+       <item>35.298635</item>
+       <item>-120.658896</item>
+       <!-- Building 43 -->
+       <item>35.298392</item>
+       <item>-120.659881</item>
+       <!-- Building 43A -->
+       <item>35.298835</item>
+       <item>-120.659820</item>
+       <!-- Building 44 -->
+       <item>35.299746</item>
+       <item>-120.657809</item>
+       <!-- Building 45 -->
+       <item>35.299228</item>
+       <item>-120.657858</item>
+       <!-- Building 46 -->
+       <item>35.299262</item>
+       <item>-120.664164</item>
+       <!-- Building 47 -->
+       <item>35.302462</item>
+       <item>-120.660096</item>
+       <!-- Building 48 -->
+       <item>35.309377</item>
+       <item>-120.663417</item>
+       <!-- Building 50 -->
+       <item>35.304248</item>
+       <item>-120.671292</item>
+       <!-- Building 52 -->
+       <item>35.300547</item>
+       <item>-120.660158</item>
+       <!-- Building 53 -->
+       <item>35.302054</item>
+       <item>-120.660051</item>
+       <!-- Building 55 -->
+       <item>35.309831</item>
+       <item>-120.679455</item>
+       <!-- Building 57 -->
+       <item>35.306074</item>
+       <item>-120.670327</item>
+       <!-- Building 58 -->
+       <item>35.303500</item>
+       <item>-120.661403</item>
+       <!-- Building 60 -->
+       <item>35.299524</item>
+       <item>-120.664125</item>
+       <!-- Building 61 -->
+       <item>35.298261</item>
+       <item>-120.664942</item>
+       <!-- Building 65 -->
+       <item>35.300375</item>
+       <item>-120.658818</item>
+       <!-- Building 70 -->
+       <item>35.303833</item>
+       <item>-120.659619</item>
+       <!-- Building 71 -->
+       <item>35.304104</item>
+       <item>-120.658728</item>
+       <!-- Building 74M -->
+       <item>35.303114</item>
+       <item>-120.660979</item>
+       <!-- Building 80 -->
+       <item>35.303581</item>
+       <item>-120.660774</item>
+       <!-- Building 81 -->
+       <item>35.302047</item>
+       <item>-120.658208</item>
+       <!-- Building 82 -->
+       <item>35.305226</item>
+       <item>-120.670850</item>
+       <!-- Building 83 -->
+       <item>35.305385</item>
+       <item>-120.671647</item>
+       <!-- Building 92M -->
+       <item>35.301033</item>
+       <item>-120.666065</item>
+       <!-- Building 100 -->
+       <item>35.302890</item>
+       <item>-120.658679</item>
+       <!-- Building 101 -->
+       <item>35.303151</item>
+       <item>-120.658213</item>
+       <!-- Building 102 -->
+       <item>35.303044</item>
+       <item>-120.657639</item>
+       <!-- Building 103 -->
+       <item>35.302558</item>
+       <item>-120.657980</item>
+       <!-- Building 104 -->
+       <item>35.302457</item>
+       <item>-120.658441</item>
+       <!-- Building 105 -->
+       <item>35.301800</item>
+       <item>-120.657288</item>
+       <!-- Building 106 -->
+       <item>35.301525</item>
+       <item>-120.657866</item>
+       <!-- Building 107 -->
+       <item>35.300874</item>
+       <item>-120.656894</item>
+       <!-- Building 108 -->
+       <item>35.300667</item>
+       <item>-120.657507</item>
+       <!-- Building 109 -->
+       <item>35.300281</item>
+       <item>-120.655891</item>
+       <!-- Building 110 -->
+       <item>35.299963</item>
+       <item>-120.656486</item>
+       <!-- Building 112 -->
+       <item>35.299292</item>
+       <item>-120.655781</item>
+       <!-- Building 113 -->
+       <item>35.298881</item>
+       <item>-120.655024</item>
+       <!-- Building 114 -->
+       <item>35.297767</item>
+       <item>-120.653776</item>
+       <!-- Building 115 -->
+       <item>35.297915</item>
+       <item>-120.663820</item>
+       <!-- Building 116 -->
+       <item>35.297674</item>
+       <item>-120.664455</item>
+       <!-- Building 117 -->
+       <item>35.297226</item>
+       <item>-120.664323</item>
+       <!-- Building 117T -->
+       <item>35.297047</item>
+       <item>-120.664624</item>
+       <!-- Building 121 -->
+       <item>35.312843</item>
+       <item>-120.683169</item>
+       <!-- Building 122 -->
+       <item>35.306957</item>
+       <item>-120.678901</item>
+       <!-- Building 124 -->
+       <item>35.298633</item>
+       <item>-120.664035</item>
+       <!-- Building 130 -->
+       <item>35.298295</item>
+       <item>-120.657250</item>
+       <!-- Building 133 -->
+       <item>35.297337</item>
+       <item>-120.661812</item>
+       <!-- Building 150 -->
+       <item>35.311532</item>
+       <item>-120.679580</item>
+       <!-- Building 154 -->
+       <item>35.311935</item>
+       <item>-120.678152</item>
+       <!-- Building 160 -->
+       <item>35.306672</item>
+       <item>-120.665155</item>
+       <!-- Building 170 -->
+       <item>35.308382</item>
+       <item>-120.658680</item>
+       <!-- Building 170A -->
+       <item>35.306750</item>
+       <item>-120.659182</item>
+       <!-- Building 170B -->
+       <item>35.307657</item>
+       <item>-120.659137</item>
+       <!-- Building 170C -->
+       <item>35.308283</item>
+       <item>-120.659243</item>
+       <!-- Building 170D -->
+       <item>35.308712</item>
+       <item>-120.659946</item>
+       <!-- Building 170E -->
+       <item>35.308904</item>
+       <item>-120.659114</item>
+       <!-- Building 170F -->
+       <item>35.308804</item>
+       <item>-120.658206</item>
+       <!-- Building 170G -->
+       <item>35.308691</item>
+       <item>-120.657591</item>
+       <!-- Building 170H -->
+       <item>35.308165</item>
+       <item>-120.658170</item>
+       <!-- Building 170I -->
+       <item>35.307670</item>
+       <item>-120.658723</item>
+       <!-- Building 180 -->
+       <item>35.301282</item>
+       <item>-120.660656</item>
+       <!-- Building 186 -->
+       <item>35.299238</item>
+       <item>-120.662769</item>
+       <!-- Building 187 -->
+       <item>35.299439</item>
+       <item>-120.662619</item>
+       <!-- Building 192 -->
+       <item>35.302865</item>
+       <item>-120.664878</item>
+       <!-- Building 197 -->
+       <item>35.302431</item>
+       <item>-120.663908</item>
+       <!-- Building 271 -->
+       <item>35.306296</item>
+       <item>-120.659938</item>
+       <!-- Building 371 -->
+       <item>35.309460</item>
+       <item>-120.659503</item>
+       <!-- Building 371B -->
+       <item>35.309399</item>
+       <item>-120.660674</item>
 
     </string-array>
 

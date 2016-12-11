@@ -1,20 +1,30 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'myMapkey'
+            keyPassword 'aST414aST'
+            storeFile file('/home/cignx/keystores/release.keystore.jks')
+            storePassword 'aST414aST'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "edu.calpoly.mjew.cpe436_calpolymapapp"
         minSdkVersion 23
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        multiDexEnabled true
+        versionCode 4
+        versionName "2.0 - revised, cleanup"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -29,17 +39,13 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.6.0'
     compile 'com.google.android.gms:play-services-auth:9.6.0'
     testCompile 'junit:junit:4.12'
-
     // Firebase stuff
     compile 'com.google.firebase:firebase-storage:9.6.0'
     compile 'com.google.firebase:firebase-database:9.6.0'
     compile 'com.firebaseui:firebase-ui-storage:0.6.0'
-
     compile 'com.android.support:design:24.2.1'
-
     // gson stuff
     compile 'com.google.code.gson:gson:2.8.0'
-
     // glide stuff
     compile 'com.github.bumptech.glide:glide:3.7.0'
 }

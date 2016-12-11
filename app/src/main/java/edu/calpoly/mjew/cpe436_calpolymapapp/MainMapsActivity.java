@@ -21,6 +21,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
@@ -38,6 +40,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
     public static ContentResolver appContentResolver;
 
     private GoogleMap mMap;
+    private Marker mCurrentMarker;
     RouteCreatorFragment mRCF;
 
     @Override
@@ -84,9 +87,25 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         Log.d("onMapReady: ", mMap.getCameraPosition().toString());
         if(findViewById(R.id.routeGeneration) != null)
             mRCF.initRouteClickListeners(mMap);
+
+        // add a marker to the map
+        mCurrentMarker = mMap.addMarker(new MarkerOptions()
+        .position(calpoly)
+        .title("Center of Campus"));
     }
 
     public GoogleMap getGoogleMap() {return mMap; }
+
+    public void resetMarker(LatLng buildingLoc, String buildingName) {
+
+        // remove previous marker
+        mCurrentMarker.remove();
+
+        // add a marker to the map
+        mCurrentMarker = mMap.addMarker(new MarkerOptions()
+                .position(buildingLoc)
+                .title(buildingName));
+    }
 
     //Prevents the map from scrolling around or zooming.
     public void lockMap()
