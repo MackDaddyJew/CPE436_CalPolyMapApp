@@ -6,4 +6,6 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#FF502D</color>
     <color name="green">#5FF464</color>
+    <color name="spinner_gray">#557755</color>
+    <color name="black">#000000</color>
 </resources>

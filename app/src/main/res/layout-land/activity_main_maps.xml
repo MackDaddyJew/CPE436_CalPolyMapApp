@@ -17,8 +17,8 @@
     <Spinner
         android:id="@+id/buildingSelection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray" />
+        android:layout_height="30dp"
+        android:background="@color/green" />
 
     <LinearLayout
         android:id="@+id/midLayout"

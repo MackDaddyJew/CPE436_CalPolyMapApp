@@ -16,8 +16,10 @@
     <Spinner
         android:id="@+id/buildingSelection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dialog"/>
+        android:layout_height="40dp"
+        android:spinnerMode="dialog"
+        android:background="@color/green"
+        android:dropDownSelector="@color/black"/>
 
     <FrameLayout
         android:id="@+id/layout_1"

@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:srcCompat="@drawable/calpoly_logo"
+        app:srcCompat="@drawable/ic_landscape_icon"
         android:id="@+id/userPostPhoto"
         android:layout_weight=".7"/>
 

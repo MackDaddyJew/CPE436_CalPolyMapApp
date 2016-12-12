@@ -102,6 +102,7 @@ public class MainMapsActivity extends AppCompatActivity implements OnMapReadyCal
         mCurrentMarker.remove();
 
         // add a marker to the map
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(buildingLoc, 17.5f));
         mCurrentMarker = mMap.addMarker(new MarkerOptions()
                 .position(buildingLoc)
                 .title(buildingName));

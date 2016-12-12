@@ -155,7 +155,7 @@ public class BuildingDetailFragment extends Fragment {
                 });
 
         // assign FAB and associated function
-        FloatingActionButton fab = (FloatingActionButton) ll.findViewById(R.id.buildingDetailFab);
+        /*FloatingActionButton fab = (FloatingActionButton) ll.findViewById(R.id.buildingDetailFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,7 +173,7 @@ public class BuildingDetailFragment extends Fragment {
 
                 Building.InitializeAllBuildings(allBuildings, allCoordsNum);
             }
-        });
+        });*/
 
         final Button createRoute = (Button) ll.findViewById(R.id.newRouteButton);
         createRoute.setOnClickListener(new View.OnClickListener()
